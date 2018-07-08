@@ -32,15 +32,20 @@ exports.bRunWitness = false;
 exports.THRESHOLD_DISTANCE = 20;
 exports.MIN_AVAILABLE_WITNESSINGS = 100;
 
-// Reddit karma rewards
+// Username price
 exports.arrUsernameLengthPriceInBytes = [
-  {threshold: 3, price: 150},
-  {threshold: 4, price: 100},
-  {threshold: 6, price: 50},
-  {threshold: 7, price: 10}
+  {threshold: 3, price: 0},
+  {threshold: 4, price: 2050},
+  {threshold: 5, price: 1750},
+  {threshold: 7, price: 1450}
 ];
+
+// Multilingual
+exports.isMultiLingual = true;
+
+exports.languagesAvailable = {
+	en: {name: "English", file: "en"},
+};
 
 // set this in conf.json
 exports.salt = null;
-
-exports.webPort = 8080;

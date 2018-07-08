@@ -1,0 +1,22 @@
+{
+	"selectLanguage": "Please select your language: ",
+	"greeting": "Here you can attest your @username.\n\nYour @username will be linked to your Byteball address.\n\nThe price of attestation depends on the length of the username.\nThe payment is nonrefundable even if the attestation fails for any reason.",
+	"insertMyAddress": "Please send me your address that you wish to attest (click ... and Insert my address).\nMake sure you are in a single-address wallet. If you don't have a single-address wallet, please add one (burger menu, add wallet) and fund it with the amount sufficient to pay for the attestation.",
+	"insertMyUsername": "Please send me your @username that you wish to attest.\n@username must be starts with \"@\" and contains only: letters, digits, \"-\", \"_\".\nSample: \"@byteball\"",
+	"wrongUsernameFormat": "Wrong @username format!\nPlease, try again.",
+	"usernameNotSell": "@username \"{{username}}\" does not sell at now! Please, send me another.",
+	"usernameTaken": "@username \"{{username}}\" is already taken. Please, send me another.",
+	"goingToAttestAddress": "Thanks, going to attest your Byteball address: {{address}}.",
+	"goingToAttestUsername": "Thanks, going to attest your @username \"{{username}}\".\nIt will be cost {{priceInBytes}} GB.",
+	"pleasePay": "Please pay for the attestation: [{{btnLabel}}]",
+	"wrongAsset": "Received payment in wrong asset",
+	"switchToSingleAddress": "Make sure you are in a single-address wallet, otherwise switch to a single-address wallet or create one and send me your address before paying.",
+	"receivedLessThanExpected": "Received {{receivedInBytes}} Bytes from you, which is less than the expected {{priceInBytes}} Bytes.",
+	"receivedPaymentFromMultipleAddresses": "Received a payment but looks like it was not sent from a single-address wallet.",
+	"receivedPaymentNotFromExpectedAddress": "Received a payment but it was not sent from the expected address {{address}}.",
+	"receivedYourPayment": "Received your payment of {{receivedInGBytes}} GB, waiting for confirmation. It should take 5-15 minutes.",
+	"paymentIsConfirmed": "Your payment is confirmed.",
+	"inAttestation": "@username \"{{username}}\" is in attestation. Please wait.",
+	"usernameAttested": "Now your @username \"{{username}}\" is attested, see the attestation unit: https://explorer.byteball.org/#{{unit}}",
+	"alreadyAttested": "@username \"{{username}}\" was already attested at {{attestationDate}} UTC. Attest {{againButton}}?"
+}
