@@ -40,6 +40,8 @@ exports.arrUsernameLengthPriceInBytes = [
   {threshold: 7, price: 1450}
 ];
 
+exports.limitDeviceAddressesAttestation = 5;
+
 // Multilingual
 exports.isMultiLingual = true;
 

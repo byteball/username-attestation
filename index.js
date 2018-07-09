@@ -296,7 +296,6 @@ function handleTransactionsBecameStable(arrUnits) {
  */
 function respond(from_address, text, response = '') {
 	const device = require('byteballcore/device.js');
-	const mutex = require('byteballcore/mutex.js');
 
 	readUserInfo(from_address, (userInfo) => {
 		if (userInfo.lang != 'unknown') {
@@ -320,7 +319,6 @@ function respond(from_address, text, response = '') {
 		}
 
 		function checkUsername(onDone) {
-			console.error('check username', text, userInfo.username);
 			if (`@${userInfo.username}` === text) {
 				return onDone();
 			}
@@ -338,19 +336,38 @@ function respond(from_address, text, response = '') {
 							return onDone(i18n.__('usernameTaken', {username: newUsername}));
 						}
 
-						// return db.query(
-						// 	`SELECT
-							
-						// 	FROM `,
-						// 	[userInfo.user_address],
-						// 	() => {
+						return db.query(
+							`SELECT
+								COUNT(receiving_address) AS count
+							FROM transactions
+							JOIN receiving_addresses USING(receiving_address)
+							WHERE device_address=?
+							AND is_confirmed=1`,
+							[from_address],
+							(rows) => {
+								if (rows.length) {
+									const row = rows[0];
+									if (row.count >= conf.limitDeviceAddressesAttestation) {
+										return onDone(i18n.__('deviceAttestedLimit', {limit: conf.limitDeviceAddressesAttestation}));
+									}
+								}
 
-						// 		return db.query(
-						// 			`SELECT
-									
-						// 			FROM `,
-						// 			[from_address],
-						// 			() => {
+								return db.query(
+									`SELECT
+										COUNT(receiving_address) AS count
+									FROM transactions
+									JOIN receiving_addresses USING(receiving_address)
+									WHERE user_address=?
+									AND is_confirmed=1`,
+									[userInfo.user_address],
+									(rows) => {
+										if (rows.length) {
+											const row = rows[0];
+											if (row.count >= 1) {
+												return onDone(i18n.__('addressAttested'));
+											}
+										}
+
 										const priceInBytes = getUsernamePriceInBytes(newUsername);
 										if (priceInBytes === 0) {
 											return onDone(i18n.__('usernameNotSell', {username: newUsername}));
@@ -366,11 +383,11 @@ function respond(from_address, text, response = '') {
 												onDone();
 											}
 										);
-						// 			}
-						// 		);
+									}
+								);
 
-						// 	}
-						// );
+							}
+						);
 					}
 				);
 			}
@@ -382,13 +399,12 @@ function respond(from_address, text, response = '') {
 		}
 
 		checkUserAddress(userAddressResponse => {
-			console.error('userAddressResponse', userAddressResponse);
 			/*
 			* user selected a new language
 			*/
 			if (text.indexOf('select language ') === 0 && conf.isMultiLingual) {
 				let lang = text.replace('select language ', '').trim();
-				console.error('select language', lang);
+				// console.error('select language', lang);
 				if (lang && conf.languagesAvailable[lang]) {
 					userInfo.lang = lang;
 					db.query('UPDATE users SET lang=? WHERE device_address=?', [userInfo.lang, from_address]);
@@ -431,7 +447,7 @@ function respond(from_address, text, response = '') {
 
 				readOrAssignReceivingAddress(from_address, userInfo, (receiving_address) => {
 					const priceInBytes = getUsernamePriceInBytes(userInfo.username);
-					console.error('priceInBytes', priceInBytes);
+					// console.error('priceInBytes', priceInBytes);
 
 					db.query(
 						`SELECT
@@ -581,7 +597,6 @@ function getTxtCommandButton(label, command) {
 }
 
 function getByteballPayButton(address, price, user_address) {
-	console.error('getByteballPayButton', address, price, user_address);
 	return `(byteball:${address}?amount=${price}&single_address=single${user_address})`;
 }
 
