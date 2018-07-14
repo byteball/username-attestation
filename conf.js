@@ -33,6 +33,7 @@ exports.THRESHOLD_DISTANCE = 20;
 exports.MIN_AVAILABLE_WITNESSINGS = 100;
 
 // Username price
+exports.priceTimeout = 3600;
 exports.arrUsernameLengthPriceInBytes = [
   {threshold: 3, price: 0},
   {threshold: 4, price: 2050},

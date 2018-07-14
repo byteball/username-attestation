@@ -200,6 +200,14 @@ function checkPayment(row, onDone) {
 	if (row.asset !== null) {
 		return onDone(i18n.__('wrongAsset'));
 	}
+	const delay = Math.round(Date.now()/1000 - row.price_ts);
+	const bLate = (delay > conf.priceTimeout);
+	
+	if (bLate) {
+		return onDone(
+			i18n.__('priceTimeout')
+		);
+	}
 
 	const priceInBytes = getUsernamePriceInBytes(row.username);
 
@@ -322,18 +330,34 @@ function respond(from_address, text, response = '') {
 			if (`@${userInfo.username}` === text) {
 				return onDone();
 			}
-			if (/^@([a-z\d\-_])+$/i.test(text)) {
+			if (/^@[a-z\d\-_]+$/i.test(text)) {
 				const newUsername = text.substr(1);
+				const borderTimeout = Math.round(Date.now()/1000 - conf.priceTimeout);
 
 				return db.query(
 					`SELECT
-						username
-					FROM users
-					WHERE username=?`,
-					[newUsername],
+						COUNT(receiving_address) AS count
+					FROM receiving_addresses
+					LEFT JOIN transactions USING(receiving_address)
+					WHERE username=? AND
+						(is_confirmed = 1
+							OR (
+								(is_confirmed IS NULL OR is_confirmed = 0)
+								AND ${db.getUnixTimestamp('last_price_date')} > ${borderTimeout}
+								AND device_address<>?
+								AND user_address<>?
+							)
+						)
+					GROUP BY receiving_address
+					`,
+					[newUsername, from_address, userInfo.user_address],
 					(rows) => {
-						if (rows.length > 0) {
-							return onDone(i18n.__('usernameTaken', {username: newUsername}));
+						console.error('!CHECK USERNAME', rows);
+						if (rows.length) {
+							const row = rows[0];
+							if (row.count) {
+								return onDone(i18n.__('usernameTaken', {username: newUsername}));
+							}
 						}
 
 						return db.query(
@@ -378,9 +402,21 @@ function respond(from_address, text, response = '') {
 
 										return db.query(
 											'UPDATE users SET username=? WHERE device_address=? AND user_address=?',
-											[userInfo.username, from_address, userInfo.user_address],
+											[newUsername, from_address, userInfo.user_address],
 											() => {
-												onDone();
+
+												db.query(
+													`UPDATE receiving_addresses
+													SET last_price_date=${db.getNow()}
+													WHERE device_address=?
+														AND user_address=?
+														AND username=?`,
+													[from_address, userInfo.user_address, newUsername],
+													() => {
+														onDone();
+													}
+												);
+
 											}
 										);
 									}
@@ -482,7 +518,7 @@ function respond(from_address, text, response = '') {
 								return device.sendMessageToDevice(
 									from_address,
 									'text',
-									(response ? response + '\n\n' : '') + i18n.__('receivedYourPayment', {receivedInGBytes: row.received_amount})
+									(response ? response + '\n\n' : '') + i18n.__('receivedYourPayment', {receivedInGBytes: row.received_amount/1e9})
 								);
 							}
 
