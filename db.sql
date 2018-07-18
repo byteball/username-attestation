@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS users (
 	device_address CHAR(33) NOT NULL PRIMARY KEY,
 	user_address CHAR(32) NULL,
-	username VARCHAR(320) NULL,
+	username VARCHAR(32) NULL,
 	lang CHAR(20) NOT NULL DEFAULT 'unknown',
 	creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (device_address) REFERENCES correspondent_devices(device_address)
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS receiving_addresses (
 	receiving_address CHAR(32) NOT NULL PRIMARY KEY,
 	device_address CHAR(33) NOT NULL,
 	user_address CHAR(32) NOT NULL,
-	username VARCHAR(320) NOT NULL,
+	username VARCHAR(32) NOT NULL,
 	creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	price INT NULL,
 	last_price_date TIMESTAMP NULL,

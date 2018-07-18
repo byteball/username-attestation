@@ -330,7 +330,7 @@ function respond(from_address, text, response = '') {
 			if (`@${userInfo.username}` === text) {
 				return onDone();
 			}
-			if (/^@[a-z\d\-_]+$/i.test(text)) {
+			if (/^@[a-z\d\-_]{1,32}$/i.test(text)) {
 				const newUsername = text.substr(1);
 				const borderTimeout = Math.round(Date.now()/1000 - conf.priceTimeout);
 
