@@ -337,7 +337,7 @@ function respond(from_address, text, response = '') {
 					FROM receiving_addresses
 					LEFT JOIN transactions USING(receiving_address)
 					WHERE username=? AND
-						(is_confirmed=1
+						(is_confirmed = 1
 							OR (
 								(is_confirmed IS NULL OR is_confirmed = 0)
 								AND ${db.getUnixTimestamp('last_price_date')} > ${borderTimeout}
