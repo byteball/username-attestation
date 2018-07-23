@@ -33,8 +33,8 @@ function postAndWriteAttestation(transaction_id, attestor_address, attestation_p
 	const mutex = require('byteballcore/mutex.js');
 	mutex.lock(['tx-'+transaction_id], (unlock) => {
 		db.query(
-      `SELECT
-        device_address, attestation_date, username
+			`SELECT
+				device_address, attestation_date, username
 			FROM attestation_units
 			JOIN transactions USING(transaction_id)
 			JOIN receiving_addresses USING(receiving_address)
@@ -62,10 +62,10 @@ function postAndWriteAttestation(transaction_id, attestor_address, attestation_p
 							let device = require('byteballcore/device.js');
 							
 							device.sendMessageToDevice(
-                row.device_address,
-                'text',
-                i18n.__('usernameAttested', {username: row.username, unit})
-              );
+								row.device_address,
+								'text',
+								i18n.__('usernameAttested', {username: row.username, unit})
+							);
 							callback(null, unit);
 							unlock();
 						}
@@ -127,20 +127,15 @@ function postAttestation(attestor_address, payload, onDone) {
 	composer.composeJoint(params);
 }
 
-function getUserId(profile){
-	return objectHash.getBase64Hash([profile, conf.salt]);
-}
-
 function getAttestationPayload(user_address, data) {
 	let profile = {
 		username: data.username,
 	};
-  profile.user_id = getUserId(profile);
-  let attestation = {
-    address: user_address,
-    profile: profile
-  };
-  return attestation;
+	let attestation = {
+		address: user_address,
+		profile: profile
+	};
+	return attestation;
 }
 
 exports.usernameAttestorAddress = null;

@@ -20,11 +20,9 @@ CREATE TABLE IF NOT EXISTS receiving_addresses (
 	FOREIGN KEY (receiving_address) REFERENCES my_addresses(address)
 );
 -- query separator
-CREATE INDEX IF NOT EXISTS byReceivingAddress ON receiving_addresses(receiving_address);
--- query separator
 CREATE INDEX IF NOT EXISTS byUserAddress ON receiving_addresses(user_address);
 -- query separator
-CREATE INDEX IF NOT EXISTS byUserEmail ON receiving_addresses(username);
+CREATE INDEX IF NOT EXISTS byUsername ON receiving_addresses(username);
 -- query separator
 CREATE TABLE IF NOT EXISTS transactions (
 	transaction_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

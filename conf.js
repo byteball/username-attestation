@@ -34,14 +34,14 @@ exports.MIN_AVAILABLE_WITNESSINGS = 100;
 
 // Username price
 exports.priceTimeout = 3600;
-exports.arrUsernameLengthPriceInBytes = [
-  {threshold: 3, price: 0},
-  {threshold: 4, price: 2050},
-  {threshold: 5, price: 1750},
-  {threshold: 7, price: 1450}
+exports.arrPricesInBytesByUsernameLength = [
+	{threshold: 3, price: 0},
+	{threshold: 4, price: 2050},
+	{threshold: 5, price: 1750},
+	{threshold: 7, price: 1450}
 ];
 
-exports.limitDeviceAddressesAttestation = 5;
+exports.maxUsernamesPerDevice = 5;
 
 // Multilingual
 exports.isMultiLingual = true;
@@ -49,6 +49,3 @@ exports.isMultiLingual = true;
 exports.languagesAvailable = {
 	en: {name: "English", file: "en"},
 };
-
-// set this in conf.json
-exports.salt = null;

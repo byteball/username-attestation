@@ -80,9 +80,6 @@ function handleWalletReady() {
 		if (!conf.admin_email || !conf.from_email) {
 			error += texts.errorConfigEmail();
 		}
-		if (!conf.salt) {
-			error += texts.errorConfigSalt();
-		}
 
 		if (error) {
 			throw new Error(error);
@@ -92,7 +89,7 @@ function handleWalletReady() {
 			console.log('== investor attestation address: ' + address1);
 			usernameAttestation.usernameAttestorAddress = address1;
 
-      setInterval(usernameAttestation.retryPostingAttestations, 10*1000);
+			setInterval(usernameAttestation.retryPostingAttestations, 10*1000);
 			setInterval(moveFundsToAttestorAddresses, 10*1000);
 			
 			handleHeadlessReady();
@@ -340,12 +337,14 @@ function respond(from_address, text, response = '') {
 					FROM receiving_addresses
 					LEFT JOIN transactions USING(receiving_address)
 					WHERE username=? AND
-						(is_confirmed = 1
+						(is_confirmed=1
 							OR (
 								(is_confirmed IS NULL OR is_confirmed = 0)
 								AND ${db.getUnixTimestamp('last_price_date')} > ${borderTimeout}
-								AND device_address<>?
-								AND user_address<>?
+								AND (
+									device_address<>?
+									OR user_address<>?
+								)
 							)
 						)
 					GROUP BY receiving_address
@@ -371,8 +370,8 @@ function respond(from_address, text, response = '') {
 							(rows) => {
 								if (rows.length) {
 									const row = rows[0];
-									if (row.count >= conf.limitDeviceAddressesAttestation) {
-										return onDone(i18n.__('deviceAttestedLimit', {limit: conf.limitDeviceAddressesAttestation}));
+									if (row.count >= conf.maxUsernamesPerDevice) {
+										return onDone(i18n.__('deviceAttestedLimit', {limit: conf.maxUsernamesPerDevice}));
 									}
 								}
 
@@ -644,7 +643,7 @@ function getByteballPayButton(address, price, user_address) {
 function getUsernamePriceInBytes(username) {
 	const length = username.length;
 	let price = 0;
-	conf.arrUsernameLengthPriceInBytes.forEach(row => {
+	conf.arrPricesInBytesByUsernameLength.forEach(row => {
 		if (length >= row.threshold) {
 				price = row.price;
 		}
