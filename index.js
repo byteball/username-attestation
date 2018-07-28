@@ -301,6 +301,7 @@ function handleTransactionsBecameStable(arrUnits) {
  */
 function respond(from_address, text, response = '') {
 	const device = require('byteballcore/device.js');
+	const mutex = require('byteballcore/mutex.js');
 
 	readUserInfo(from_address, (userInfo) => {
 		if (userInfo.lang != 'unknown') {
@@ -331,100 +332,109 @@ function respond(from_address, text, response = '') {
 				const newUsername = text.substr(1);
 				const borderTimeout = Math.round(Date.now()/1000 - conf.priceTimeout);
 
-				return db.query(
-					`SELECT
-						COUNT(receiving_address) AS count
-					FROM receiving_addresses
-					LEFT JOIN transactions USING(receiving_address)
-					WHERE username=? AND
-						(is_confirmed = 1
-							OR (
-								(is_confirmed IS NULL OR is_confirmed = 0)
-								AND ${db.getUnixTimestamp('last_price_date')} > ${borderTimeout}
-								AND (
-									device_address<>?
-									OR user_address<>?
+				return mutex.lock([`username-${newUsername}`], (unlock) => {
+
+					function onDoneLockedCheckUsername(text) {
+						unlock();
+						return onDone(text);
+					}
+
+					db.query(
+						`SELECT
+							COUNT(receiving_address) AS count
+						FROM receiving_addresses
+						LEFT JOIN transactions USING(receiving_address)
+						WHERE username=? AND
+							(is_confirmed = 1
+								OR (
+									(is_confirmed IS NULL OR is_confirmed = 0)
+									AND ${db.getUnixTimestamp('last_price_date')} > ${borderTimeout}
+									AND (
+										device_address<>?
+										OR user_address<>?
+									)
 								)
 							)
-						)
-					GROUP BY receiving_address
-					`,
-					[newUsername, from_address, userInfo.user_address],
-					(rows) => {
-						console.error('!CHECK USERNAME', rows);
-						if (rows.length) {
-							const row = rows[0];
-							if (row.count) {
-								return onDone(i18n.__('usernameTaken', {username: newUsername}));
-							}
-						}
-
-						return db.query(
-							`SELECT
-								COUNT(receiving_address) AS count
-							FROM transactions
-							JOIN receiving_addresses USING(receiving_address)
-							WHERE device_address=?
-							AND is_confirmed=1`,
-							[from_address],
-							(rows) => {
-								if (rows.length) {
-									const row = rows[0];
-									if (row.count >= conf.maxUsernamesPerDevice) {
-										return onDone(i18n.__('deviceAttestedLimit', {limit: conf.maxUsernamesPerDevice}));
-									}
+						GROUP BY receiving_address
+						`,
+						[newUsername, from_address, userInfo.user_address],
+						(rows) => {
+							console.error('!CHECK USERNAME', rows);
+							if (rows.length) {
+								const row = rows[0];
+								if (row.count) {
+									return onDoneLockedCheckUsername(i18n.__('usernameTaken', {username: newUsername}));
 								}
-
-								return db.query(
-									`SELECT
-										COUNT(receiving_address) AS count
-									FROM transactions
-									JOIN receiving_addresses USING(receiving_address)
-									WHERE user_address=?
-									AND is_confirmed=1`,
-									[userInfo.user_address],
-									(rows) => {
-										if (rows.length) {
-											const row = rows[0];
-											if (row.count >= 1) {
-												return onDone(i18n.__('addressAttested'));
-											}
-										}
-
-										const priceInBytes = getUsernamePriceInBytes(newUsername);
-										if (priceInBytes === 0) {
-											return onDone(i18n.__('usernameNotSell', {username: newUsername}));
-										}
-										response += i18n.__('goingToAttestUsername', {username: newUsername, priceInBytes: priceInBytes/1e9});
-
-										userInfo.username = newUsername;
-
-										return db.query(
-											'UPDATE users SET username=? WHERE device_address=? AND user_address=?',
-											[newUsername, from_address, userInfo.user_address],
-											() => {
-
-												db.query(
-													`UPDATE receiving_addresses
-													SET last_price_date=${db.getNow()}
-													WHERE device_address=?
-														AND user_address=?
-														AND username=?`,
-													[from_address, userInfo.user_address, newUsername],
-													() => {
-														onDone();
-													}
-												);
-
-											}
-										);
-									}
-								);
-
 							}
-						);
-					}
-				);
+	
+							return db.query(
+								`SELECT
+									COUNT(receiving_address) AS count
+								FROM transactions
+								JOIN receiving_addresses USING(receiving_address)
+								WHERE device_address=?
+								AND is_confirmed=1`,
+								[from_address],
+								(rows) => {
+									if (rows.length) {
+										const row = rows[0];
+										if (row.count >= conf.maxUsernamesPerDevice) {
+											return onDoneLockedCheckUsername(i18n.__('deviceAttestedLimit', {limit: conf.maxUsernamesPerDevice}));
+										}
+									}
+	
+									return db.query(
+										`SELECT
+											COUNT(receiving_address) AS count
+										FROM transactions
+										JOIN receiving_addresses USING(receiving_address)
+										WHERE user_address=?
+										AND is_confirmed=1`,
+										[userInfo.user_address],
+										(rows) => {
+											if (rows.length) {
+												const row = rows[0];
+												if (row.count >= 1) {
+													return onDoneLockedCheckUsername(i18n.__('addressAttested'));
+												}
+											}
+	
+											const priceInBytes = getUsernamePriceInBytes(newUsername);
+											if (priceInBytes === 0) {
+												return onDoneLockedCheckUsername(i18n.__('usernameNotSell', {username: newUsername}));
+											}
+											response += i18n.__('goingToAttestUsername', {username: newUsername, priceInBytes: priceInBytes/1e9});
+	
+											userInfo.username = newUsername;
+	
+											return db.query(
+												'UPDATE users SET username=? WHERE device_address=? AND user_address=?',
+												[newUsername, from_address, userInfo.user_address],
+												() => {
+	
+													db.query(
+														`UPDATE receiving_addresses
+														SET last_price_date=${db.getNow()}
+														WHERE device_address=?
+															AND user_address=?
+															AND username=?`,
+														[from_address, userInfo.user_address, newUsername],
+														() => {
+															onDoneLockedCheckUsername();
+														}
+													);
+	
+												}
+											);
+										}
+									);
+	
+								}
+							);
+						}
+					);
+
+				});
 			}
 			if (/^@.+$/.test(text)) {
 				return onDone(i18n.__('wrongUsernameFormat'));
