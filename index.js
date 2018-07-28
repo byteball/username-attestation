@@ -143,6 +143,8 @@ function moveFundsToAttestorAddresses() {
 
 function handleNewTransactions(arrUnits) {
 	const device = require('byteballcore/device.js');
+	const mutex = require('byteballcore/mutex.js');
+
 	db.query(
 		`SELECT
 			amount, asset, unit,
@@ -161,32 +163,38 @@ function handleNewTransactions(arrUnits) {
 		(rows) => {
 			rows.forEach((row) => {
 
-				checkPayment(row, (error) => {
-					if (error) {
-						return db.query(
-							`INSERT ${db.getIgnore()} INTO rejected_payments
-							(receiving_address, price, received_amount, payment_unit, error)
-							VALUES (?,?,?,?,?)`,
-							[row.receiving_address, row.price, row.amount, row.unit, error],
-							() => {
-								device.sendMessageToDevice(row.device_address, 'text', error);
-							}
-						);
-					}
+				mutex.lock(`username-${row.username}`, (unlock) => {
 
-					db.query(
-						`INSERT INTO transactions
-						(receiving_address, price, received_amount, payment_unit)
-						VALUES (?,?,?,?)`,
-						[row.receiving_address, row.price, row.amount, row.unit],
-						() => {
-							device.sendMessageToDevice(row.device_address, 'text',
-								i18n.__('receivedYourPayment', {receivedInGBytes: row.amount/1e9})
+					checkPayment(row, (error) => {
+						if (error) {
+							return db.query(
+								`INSERT ${db.getIgnore()} INTO rejected_payments
+								(receiving_address, price, received_amount, payment_unit, error)
+								VALUES (?,?,?,?,?)`,
+								[row.receiving_address, row.price, row.amount, row.unit, error],
+								() => {
+									unlock();
+									device.sendMessageToDevice(row.device_address, 'text', error);
+								}
 							);
 						}
-					);
+	
+						db.query(
+							`INSERT INTO transactions
+							(receiving_address, price, received_amount, payment_unit)
+							VALUES (?,?,?,?)`,
+							[row.receiving_address, row.price, row.amount, row.unit],
+							() => {
+								unlock();
+								device.sendMessageToDevice(row.device_address, 'text',
+									i18n.__('receivedYourPayment', {receivedInGBytes: row.amount/1e9})
+								);
+							}
+						);
+	
+					}); // checkPayment
 
-				}); // checkPayment
+				});
 
 			});
 		}
