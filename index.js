@@ -214,32 +214,42 @@ function checkPayment(row, onDone) {
 		);
 	}
 
-	const priceInBytes = getUsernamePriceInBytes(row.username);
+	checkUsernamesLimitsPerDeviceAndUserAddresses(
+		row.device_address, row.user_address,
+		(text) => {
+			if (text) {
+				return onDone(text);
+			}
 
-	if (row.amount < priceInBytes) {
-		let text = i18n.__('receivedLessThanExpected', {receivedInBytes: row.amount, priceInBytes: priceInBytes});
-		return onDone(
-			text + '\n\n' +
-			i18n.__('pleasePay', {payButton: 'attestation payment'}) +
-			getByteballPayButton(row.receiving_address, priceInBytes, row.user_address)
-		);
-	}
+			const priceInBytes = getUsernamePriceInBytes(row.username);
 
-	function resetUserAddress() {
-		db.query("UPDATE users SET user_address=NULL WHERE device_address=?", [row.device_address]);
-	}
-
-	db.query("SELECT address FROM unit_authors WHERE unit=?", [row.unit], (author_rows) => {
-		if (author_rows.length !== 1){
-			resetUserAddress();
-			return onDone(i18n.__('receivedPaymentFromMultipleAddresses') +"\n"+ i18n.__('switchToSingleAddress'));
+			if (row.amount < priceInBytes) {
+				let text = i18n.__('receivedLessThanExpected', {receivedInBytes: row.amount, priceInBytes: priceInBytes});
+				return onDone(
+					text + '\n\n' +
+					i18n.__('pleasePay', {payButton: 'attestation payment'}) +
+					getByteballPayButton(row.receiving_address, priceInBytes, row.user_address)
+				);
+			}
+		
+			function resetUserAddress() {
+				db.query("UPDATE users SET user_address=NULL WHERE device_address=?", [row.device_address]);
+			}
+		
+			db.query("SELECT address FROM unit_authors WHERE unit=?", [row.unit], (author_rows) => {
+				if (author_rows.length !== 1){
+					resetUserAddress();
+					return onDone(i18n.__('receivedPaymentFromMultipleAddresses') +"\n"+ i18n.__('switchToSingleAddress'));
+				}
+				if (author_rows[0].address !== row.user_address){
+					resetUserAddress();
+					return onDone(i18n.__('receivedPaymentNotFromExpectedAddress', {address:row.user_address}) +"\n"+ i18n.__('switchToSingleAddress'));
+				}
+				onDone();
+			});
 		}
-		if (author_rows[0].address !== row.user_address){
-			resetUserAddress();
-			return onDone(i18n.__('receivedPaymentNotFromExpectedAddress', {address:row.user_address}) +"\n"+ i18n.__('switchToSingleAddress'));
-		}
-		onDone();
-	});
+	); // checkUsernamesLimitsPerDeviceAndUserAddresses
+
 }
 
 function handleTransactionsBecameStable(arrUnits) {
@@ -375,70 +385,43 @@ function respond(from_address, text, response = '') {
 								}
 							}
 	
-							return db.query(
-								`SELECT
-									COUNT(receiving_address) AS count
-								FROM transactions
-								JOIN receiving_addresses USING(receiving_address)
-								WHERE device_address=?
-								AND is_confirmed=1`,
-								[from_address],
-								(rows) => {
-									if (rows.length) {
-										const row = rows[0];
-										if (row.count >= conf.maxUsernamesPerDevice) {
-											return onDoneLockedCheckUsername(i18n.__('deviceAttestedLimit', {limit: conf.maxUsernamesPerDevice}));
-										}
+							checkUsernamesLimitsPerDeviceAndUserAddresses(
+								from_address, userInfo.user_address,
+								(text) => {
+									if (text) {
+										return onDoneLockedCheckUsername(text);
 									}
 	
+									const priceInBytes = getUsernamePriceInBytes(newUsername);
+									if (priceInBytes === 0) {
+										return onDoneLockedCheckUsername(i18n.__('usernameNotSell', {username: newUsername}));
+									}
+									response += i18n.__('goingToAttestUsername', {username: newUsername, priceInBytes: priceInBytes/1e9});
+
+									userInfo.username = newUsername;
+
 									return db.query(
-										`SELECT
-											COUNT(receiving_address) AS count
-										FROM transactions
-										JOIN receiving_addresses USING(receiving_address)
-										WHERE user_address=?
-										AND is_confirmed=1`,
-										[userInfo.user_address],
-										(rows) => {
-											if (rows.length) {
-												const row = rows[0];
-												if (row.count >= 1) {
-													return onDoneLockedCheckUsername(i18n.__('addressAttested'));
-												}
-											}
-	
-											const priceInBytes = getUsernamePriceInBytes(newUsername);
-											if (priceInBytes === 0) {
-												return onDoneLockedCheckUsername(i18n.__('usernameNotSell', {username: newUsername}));
-											}
-											response += i18n.__('goingToAttestUsername', {username: newUsername, priceInBytes: priceInBytes/1e9});
-	
-											userInfo.username = newUsername;
-	
-											return db.query(
-												'UPDATE users SET username=? WHERE device_address=? AND user_address=?',
-												[newUsername, from_address, userInfo.user_address],
+										'UPDATE users SET username=? WHERE device_address=? AND user_address=?',
+										[newUsername, from_address, userInfo.user_address],
+										() => {
+
+											db.query(
+												`UPDATE receiving_addresses
+												SET last_price_date=${db.getNow()}
+												WHERE device_address=?
+													AND user_address=?
+													AND username=?`,
+												[from_address, userInfo.user_address, newUsername],
 												() => {
-	
-													db.query(
-														`UPDATE receiving_addresses
-														SET last_price_date=${db.getNow()}
-														WHERE device_address=?
-															AND user_address=?
-															AND username=?`,
-														[from_address, userInfo.user_address, newUsername],
-														() => {
-															onDoneLockedCheckUsername();
-														}
-													);
-	
+													onDoneLockedCheckUsername();
 												}
 											);
+
 										}
 									);
-	
 								}
-							);
+							); // checkUsernamesLimitsPerDeviceAndUserAddresses
+
 						}
 					);
 
@@ -535,7 +518,7 @@ function respond(from_address, text, response = '') {
 								return device.sendMessageToDevice(
 									from_address,
 									'text',
-									(response ? response + '\n\n' : '') + i18n.__('receivedYourPayment', {receivedInGBytes: row.received_amount/1e9})
+									(response ? response + '\n\n' : '') + i18n.__('receivedYourPayment', {receivedInGBytes: row.received_amount/1e9, username: userInfo.username})
 								);
 							}
 
@@ -633,6 +616,52 @@ function readOrAssignReceivingAddress(device_address, userInfo, callback) {
 			}
 		);
 	});
+}
+
+/**
+ * check usernames limits per device and user addresses
+ * @param {string} device_address
+ * @param {string} user_address
+ * @return {function}
+ */
+function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_address, onDone) {
+	db.query(
+		`SELECT
+			COUNT(receiving_address) AS count
+		FROM transactions
+		JOIN receiving_addresses USING(receiving_address)
+		WHERE device_address=?
+		AND is_confirmed=1`,
+		[device_address],
+		(rows) => {
+			if (rows.length) {
+				const row = rows[0];
+				if (row.count >= conf.maxUsernamesPerDevice) {
+					return onDone(i18n.__('deviceAttestedLimit', {limit: conf.maxUsernamesPerDevice}));
+				}
+			}
+
+			return db.query(
+				`SELECT
+					COUNT(receiving_address) AS count
+				FROM transactions
+				JOIN receiving_addresses USING(receiving_address)
+				WHERE user_address=?
+				AND is_confirmed=1`,
+				[user_address],
+				(rows) => {
+					if (rows.length) {
+						const row = rows[0];
+						if (row.count >= 1) {
+							return onDone(i18n.__('addressAttested'));
+						}
+					}
+
+					onDone();
+				}
+			);
+		}
+	);
 }
 
 function getLanguagesSelection() {
