@@ -357,75 +357,65 @@ function respond(from_address, text, response = '') {
 						return onDone(text);
 					}
 
-					db.query(
-						`SELECT
-							COUNT(receiving_address) AS count
-						FROM receiving_addresses
-						LEFT JOIN transactions USING(receiving_address)
-						WHERE username=? AND
-							(is_confirmed = 1
-								OR (
-									(is_confirmed IS NULL OR is_confirmed = 0)
-									AND ${db.getUnixTimestamp('last_price_date')} > ${borderTimeout}
-									AND (
-										device_address<>?
-										OR user_address<>?
-									)
-								)
-							)
-						GROUP BY receiving_address
-						`,
-						[newUsername, from_address, userInfo.user_address],
-						(rows) => {
-							console.error('!CHECK USERNAME', rows);
-							if (rows.length) {
-								const row = rows[0];
-								if (row.count) {
-									return onDoneLockedCheckUsername(i18n.__('usernameTaken', {username: newUsername}));
-								}
+					checkUsernameWasNotTaken(
+						from_address, userInfo.user_address,
+						newUsername,
+						(text) => {
+							if (text) {
+								return onDoneLockedCheckUsername(text);
 							}
-	
-							checkUsernamesLimitsPerDeviceAndUserAddresses(
+
+							checkUserUsernamesAreNotInPaymentConfirmation(
 								from_address, userInfo.user_address,
 								(text) => {
 									if (text) {
 										return onDoneLockedCheckUsername(text);
 									}
 	
-									const priceInBytes = getUsernamePriceInBytes(newUsername);
-									if (priceInBytes === 0) {
-										return onDoneLockedCheckUsername(i18n.__('usernameNotSell', {username: newUsername}));
-									}
-									response += i18n.__('goingToAttestUsername', {username: newUsername, priceInBytes: priceInBytes/1e9});
+									checkUsernamesLimitsPerDeviceAndUserAddresses(
+										from_address, userInfo.user_address,
+										(text) => {
+											if (text) {
+												return onDoneLockedCheckUsername(text);
+											}
+			
+											const priceInBytes = getUsernamePriceInBytes(newUsername);
+											if (priceInBytes === 0) {
+												return onDoneLockedCheckUsername(i18n.__('usernameNotSell', {username: newUsername}));
+											}
+											response += i18n.__('goingToAttestUsername', {username: newUsername, priceInBytes: priceInBytes/1e9});
 
-									userInfo.username = newUsername;
+											userInfo.username = newUsername;
 
-									return db.query(
-										'UPDATE users SET username=? WHERE device_address=? AND user_address=?',
-										[newUsername, from_address, userInfo.user_address],
-										() => {
-
-											db.query(
-												`UPDATE receiving_addresses
-												SET last_price_date=${db.getNow()}
-												WHERE device_address=?
-													AND user_address=?
-													AND username=?`,
-												[from_address, userInfo.user_address, newUsername],
+											return db.query(
+												'UPDATE users SET username=? WHERE device_address=? AND user_address=?',
+												[newUsername, from_address, userInfo.user_address],
 												() => {
-													onDoneLockedCheckUsername();
+
+													db.query(
+														`UPDATE receiving_addresses
+														SET last_price_date=${db.getNow()}
+														WHERE device_address=?
+															AND user_address=?
+															AND username=?`,
+														[from_address, userInfo.user_address, newUsername],
+														() => {
+															onDoneLockedCheckUsername();
+														}
+													);
+
 												}
 											);
-
 										}
-									);
+									); // checkUsernamesLimitsPerDeviceAndUserAddresses
+
 								}
-							); // checkUsernamesLimitsPerDeviceAndUserAddresses
+							); // checkUserUsernamesAreNotInPaymentConfirmation
 
 						}
-					);
+					); // checkUsernameWasNotTaken
 
-				});
+				}); // mutex.lock
 			}
 			if (/^@.+$/.test(text)) {
 				return onDone(i18n.__('wrongUsernameFormat'));
@@ -619,6 +609,74 @@ function readOrAssignReceivingAddress(device_address, userInfo, callback) {
 }
 
 /**
+ * check username is already available
+ * @param {string} device_address
+ * @param {string} user_address
+ * @param {string} username
+ * @return {function}
+ */
+function checkUsernameWasNotTaken(device_address, user_address, username, onDone) {
+	const borderTimeout = Math.round(Date.now()/1000 - conf.priceTimeout);
+
+	db.query(
+		`SELECT
+			COUNT(receiving_address) AS count
+		FROM receiving_addresses
+		LEFT JOIN transactions USING(receiving_address)
+		WHERE username=? AND
+			(is_confirmed = 1
+				OR (
+					(is_confirmed IS NULL OR is_confirmed = 0)
+					AND ${db.getUnixTimestamp('last_price_date')} > ${borderTimeout}
+					AND (
+						device_address<>?
+						OR user_address<>?
+					)
+				)
+			)
+		GROUP BY receiving_address
+		`,
+		[username, device_address, user_address],
+		(rows) => {
+			if (rows.length) {
+				const row = rows[0];
+				if (row.count) {
+					return onDone(i18n.__('usernameTaken', { username }));
+				}
+			}
+
+			onDone();
+		}
+	);
+}
+
+/**
+ * check user username are not in payment confirmation
+ * @param {string} device_address
+ * @param {string} user_address
+ * @param {string} username
+ * @return {function}
+ */
+function checkUserUsernamesAreNotInPaymentConfirmation(device_address, user_address, onDone) {
+	db.query(
+		`SELECT
+			username
+		FROM transactions
+		JOIN receiving_addresses USING(receiving_address)
+		WHERE (device_address=? OR user_address=?)
+			AND is_confirmed=0`,
+		[device_address, user_address],
+		(rows) => {
+			if (rows.length) {
+				return onDone(i18n.__('paymentIsAwaitingConfirmation', {username: rows[0].username}));
+			}
+			
+			onDone();
+		}
+	);
+}
+
+/**
  * check usernames limits per device and user addresses
  * @param {string} device_address
  * @param {string} user_address
@@ -631,7 +689,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 		FROM transactions
 		JOIN receiving_addresses USING(receiving_address)
 		WHERE device_address=?
-		AND is_confirmed=1`,
+			AND is_confirmed=1`,
 		[device_address],
 		(rows) => {
 			if (rows.length) {
@@ -647,7 +705,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 				FROM transactions
 				JOIN receiving_addresses USING(receiving_address)
 				WHERE user_address=?
-				AND is_confirmed=1`,
+					AND is_confirmed=1`,
 				[user_address],
 				(rows) => {
 					if (rows.length) {
