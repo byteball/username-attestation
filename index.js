@@ -187,7 +187,7 @@ function handleNewTransactions(arrUnits) {
 							() => {
 								unlock();
 								device.sendMessageToDevice(row.device_address, 'text',
-									i18n.__('receivedYourPayment', {receivedInGBytes: row.amount/1e9})
+									i18n.__('receivedYourPayment', {receivedInGBytes: row.amount/1e9, username: row.username})
 								);
 							}
 						);
@@ -326,6 +326,40 @@ function respond(from_address, text, response = '') {
 			i18n.setLocale(userInfo.lang);
 		}
 
+		/*
+		* user selected a new language
+		*/
+		if (text.indexOf('select language ') === 0 && conf.isMultiLingual) {
+			let lang = text.replace('select language ', '').trim();
+			// console.error('select language', lang);
+			if (lang && conf.languagesAvailable[lang]) {
+				userInfo.lang = lang;
+				db.query('UPDATE users SET lang=? WHERE device_address=?', [userInfo.lang, from_address]);
+
+				i18n.setLocale(lang);
+
+				device.sendMessageToDevice(
+					from_address,
+					'text',
+					'➡ ' + getTxtCommandButton('Go back to language selection', 'select language') + '\n\n' +
+						i18n.__('greeting')
+				);
+			}
+
+		}
+
+		if ((userInfo.lang === 'unknown' || text === 'select language') && conf.isMultiLingual) {
+			// If unknown language and multi-language turned on then we propose to select one
+			return device.sendMessageToDevice(from_address, 'text', getLanguagesSelection());
+		} else if (text === '') {
+			// else if paring then we start with greeting text
+			device.sendMessageToDevice(
+				from_address,
+				'text',
+				i18n.__('greeting')
+			);
+		}
+
 		function checkUserAddress(onDone) {
 			if (validationUtils.isValidAddress(text)) {
 				userInfo.user_address = text;
@@ -422,46 +456,9 @@ function respond(from_address, text, response = '') {
 			}
 			if (userInfo.username) return onDone();
 			onDone(i18n.__('insertMyUsername'));
-		}
+		} // function checkUsername
 
 		checkUserAddress(userAddressResponse => {
-			/*
-			* user selected a new language
-			*/
-			if (text.indexOf('select language ') === 0 && conf.isMultiLingual) {
-				let lang = text.replace('select language ', '').trim();
-				// console.error('select language', lang);
-				if (lang && conf.languagesAvailable[lang]) {
-					userInfo.lang = lang;
-					db.query('UPDATE users SET lang=? WHERE device_address=?', [userInfo.lang, from_address]);
-
-					i18n.setLocale(lang);
-					if (userAddressResponse) {
-						userAddressResponse = i18n.__('insertMyAddress');
-					}
-
-					device.sendMessageToDevice(
-						from_address,
-						'text',
-						'➡ ' + getTxtCommandButton('Go back to language selection', 'select language') + '\n\n' +
-							i18n.__('greeting')
-					);
-				}
-
-			}
-
-			if ((userInfo.lang === 'unknown' || text === 'select language') && conf.isMultiLingual) {
-				// If unknown language and multi-language turned on then we propose to select one
-				return device.sendMessageToDevice(from_address, 'text', getLanguagesSelection());
-			} else if (text === '') {
-				// else if paring then we start with greeting text
-				device.sendMessageToDevice(
-					from_address,
-					'text',
-					i18n.__('greeting')
-				);
-			}
-
 			if (userAddressResponse) {
 				return device.sendMessageToDevice(from_address, 'text', (response ? response + '\n\n' : '') + userAddressResponse);
 			}
@@ -535,9 +532,9 @@ function respond(from_address, text, response = '') {
 						}
 					);
 
-				});
-			});
-		});
+				}); // readOrAssignReceivingAddress
+			}); // checkUsername
+		}); // checkUserAddress
 	});
 }
 
@@ -670,7 +667,7 @@ function checkUserUsernamesAreNotInPaymentConfirmation(device_address, user_addr
 			if (rows.length) {
 				return onDone(i18n.__('paymentIsAwaitingConfirmation', {username: rows[0].username}));
 			}
-			
+
 			onDone();
 		}
 	);

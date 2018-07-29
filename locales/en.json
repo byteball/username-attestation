@@ -22,5 +22,5 @@
 	"paymentIsConfirmed": "Your payment is confirmed.",
 	"inAttestation": "@username \"{{username}}\" is in attestation. Please wait.",
 	"usernameAttested": "Now your @username \"{{username}}\" is attested, see the attestation unit: https://explorer.byteball.org/#{{unit}}",
-	"alreadyAttested": "@username \"{{username}}\" was already attested at {{attestationDate}} UTC. Attest {{againButton}}?"
+	"alreadyAttested": "@username \"{{username}}\" was already attested at {{attestationDate}} UTC."
 }
