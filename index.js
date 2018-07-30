@@ -91,6 +91,7 @@ function handleWalletReady() {
 
 			setInterval(usernameAttestation.retryPostingAttestations, 10*1000);
 			setInterval(moveFundsToAttestorAddresses, 10*1000);
+			setInterval(checkUsernamesReservationTimeout, 60*1000);
 			
 			handleHeadlessReady();
 		});
@@ -205,51 +206,90 @@ function checkPayment(row, onDone) {
 	if (row.asset !== null) {
 		return onDone(i18n.__('wrongAsset'));
 	}
+
+	checkPaymentIsLate(row, (text) => {
+		if (text) {
+			return onDone(text);
+		}
+
+		checkUsernamesLimitsPerDeviceAndUserAddresses(
+			row.device_address, row.user_address,
+			(text) => {
+				if (text) {
+					return onDone(text);
+				}
+	
+				const priceInBytes = getUsernamePriceInBytes(row.username);
+	
+				if (row.amount < priceInBytes) {
+					let text = i18n.__('receivedLessThanExpected', {receivedInBytes: row.amount, priceInBytes: priceInBytes});
+					return onDone(
+						text + '\n\n' +
+						i18n.__('pleasePay', {payButton: 'attestation payment'}) +
+						getByteballPayButton(row.receiving_address, priceInBytes, row.user_address)
+					);
+				}
+			
+				function resetUserAddress() {
+					db.query("UPDATE users SET user_address=NULL WHERE device_address=?", [row.device_address]);
+				}
+			
+				db.query("SELECT address FROM unit_authors WHERE unit=?", [row.unit], (author_rows) => {
+					if (author_rows.length !== 1){
+						resetUserAddress();
+						return onDone(i18n.__('receivedPaymentFromMultipleAddresses') +"\n"+ i18n.__('switchToSingleAddress'));
+					}
+					if (author_rows[0].address !== row.user_address){
+						resetUserAddress();
+						return onDone(i18n.__('receivedPaymentNotFromExpectedAddress', {address:row.user_address}) +"\n"+ i18n.__('switchToSingleAddress'));
+					}
+					onDone();
+				});
+			}
+		); // checkUsernamesLimitsPerDeviceAndUserAddresses
+	
+	});
+
+}
+
+function checkPaymentIsLate(row, onDone) {
 	const delay = Math.round(Date.now()/1000 - row.price_ts);
 	const bLate = (delay > conf.priceTimeout);
+	const borderTimeout = Math.round(Date.now()/1000 - conf.priceTimeout);
 	
 	if (bLate) {
-		return onDone(
-			i18n.__('priceTimeout')
+		return db.query(
+			`SELECT
+				COUNT(receiving_address) AS count
+			FROM receiving_addresses
+			LEFT JOIN transactions USING(receiving_address)
+			WHERE username=? AND
+				(is_confirmed = 1
+					OR (
+						(is_confirmed IS NULL OR is_confirmed = 0)
+						AND ${db.getUnixTimestamp('last_price_date')} > '${borderTimeout}'
+						AND device_address<>?
+						AND user_address<>?
+					)
+				)
+			GROUP BY receiving_address`,
+			[row.username, row.device_address, row.user_address],
+			(rows) => {
+				if (rows.length) {
+					if (rows[0].count) {
+						return onDone(
+							i18n.__('priceTimeout') + '\n' +
+							i18n.__('usernameTaken', { username: row.username })
+						);
+					}
+				}
+
+				onDone();
+			}
 		);
 	}
 
-	checkUsernamesLimitsPerDeviceAndUserAddresses(
-		row.device_address, row.user_address,
-		(text) => {
-			if (text) {
-				return onDone(text);
-			}
-
-			const priceInBytes = getUsernamePriceInBytes(row.username);
-
-			if (row.amount < priceInBytes) {
-				let text = i18n.__('receivedLessThanExpected', {receivedInBytes: row.amount, priceInBytes: priceInBytes});
-				return onDone(
-					text + '\n\n' +
-					i18n.__('pleasePay', {payButton: 'attestation payment'}) +
-					getByteballPayButton(row.receiving_address, priceInBytes, row.user_address)
-				);
-			}
-		
-			function resetUserAddress() {
-				db.query("UPDATE users SET user_address=NULL WHERE device_address=?", [row.device_address]);
-			}
-		
-			db.query("SELECT address FROM unit_authors WHERE unit=?", [row.unit], (author_rows) => {
-				if (author_rows.length !== 1){
-					resetUserAddress();
-					return onDone(i18n.__('receivedPaymentFromMultipleAddresses') +"\n"+ i18n.__('switchToSingleAddress'));
-				}
-				if (author_rows[0].address !== row.user_address){
-					resetUserAddress();
-					return onDone(i18n.__('receivedPaymentNotFromExpectedAddress', {address:row.user_address}) +"\n"+ i18n.__('switchToSingleAddress'));
-				}
-				onDone();
-			});
-		}
-	); // checkUsernamesLimitsPerDeviceAndUserAddresses
-
+	onDone();
 }
 
 function handleTransactionsBecameStable(arrUnits) {
@@ -428,7 +468,7 @@ function respond(from_address, text, response = '') {
 
 													db.query(
 														`UPDATE receiving_addresses
-														SET last_price_date=${db.getNow()}
+														SET last_price_date=${db.getNow()}, is_notified=0
 														WHERE device_address=?
 															AND user_address=?
 															AND username=?`,
@@ -624,7 +664,7 @@ function checkUsernameWasNotTaken(device_address, user_address, username, onDone
 			(is_confirmed = 1
 				OR (
 					(is_confirmed IS NULL OR is_confirmed = 0)
-					AND ${db.getUnixTimestamp('last_price_date')} > ${borderTimeout}
+					AND ${db.getUnixTimestamp('last_price_date')} > '${borderTimeout}'
 					AND (
 						device_address<>?
 						OR user_address<>?
@@ -685,8 +725,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 			COUNT(receiving_address) AS count
 		FROM transactions
 		JOIN receiving_addresses USING(receiving_address)
-		WHERE device_address=?
-			AND is_confirmed=1`,
+		WHERE device_address=?`,
 		[device_address],
 		(rows) => {
 			if (rows.length) {
@@ -701,8 +740,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 					COUNT(receiving_address) AS count
 				FROM transactions
 				JOIN receiving_addresses USING(receiving_address)
-				WHERE user_address=?
-					AND is_confirmed=1`,
+				WHERE user_address=?`,
 				[user_address],
 				(rows) => {
 					if (rows.length) {
@@ -715,6 +753,50 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 					onDone();
 				}
 			);
+		}
+	);
+}
+
+function checkUsernamesReservationTimeout() {
+	const device = require('byteballcore/device.js');
+	const borderTimeout = Math.round(Date.now()/1000 - (conf.priceTimeout + conf.timeExpirationReervation));
+
+	db.query(
+		`SELECT
+			receiving_address,
+			device_address,
+			username
+		FROM receiving_addresses
+		LEFT JOIN transactions USING(receiving_address)
+		WHERE 
+			(is_confirmed IS NULL OR is_confirmed=0)
+			AND is_notified=0
+			AND ${db.getUnixTimestamp('last_price_date')} <= '${borderTimeout}'
+		`,
+		[],
+		(rows) => {
+			rows.forEach(row => {
+
+				device.sendMessageToDevice(
+					row.device_address,
+					'text',
+					i18n.__('reservedWillExpiring', {username: row.username}),
+					{
+						ifOk: () => {
+
+							db.query(
+								`UPDATE receiving_addresses
+								SET is_notified=1
+								WHERE receiving_address=?`,
+								[row.receiving_address],
+								(res) => {}
+							);
+
+						}
+					}
+				);
+
+			});
 		}
 	);
 }

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS receiving_addresses (
 	creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	price INT NULL,
 	last_price_date TIMESTAMP NULL,
+	is_notified INT NOT NULL DEFAULT 0,
 	UNIQUE (device_address, user_address, username),
 	FOREIGN KEY (device_address) REFERENCES correspondent_devices(device_address),
 	FOREIGN KEY (receiving_address) REFERENCES my_addresses(address)

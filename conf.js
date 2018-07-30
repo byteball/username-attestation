@@ -41,6 +41,8 @@ exports.arrPricesInBytesByUsernameLength = [
 	{threshold: 7, price: 1450}
 ];
 
+exports.timeExpirationReervation = 120;
+
 exports.maxUsernamesPerDevice = 5;
 
 // Multilingual
