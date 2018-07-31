@@ -263,10 +263,11 @@ function checkPaymentIsLate(row, onDone) {
 				COUNT(receiving_address) AS count
 			FROM receiving_addresses
 			LEFT JOIN transactions USING(receiving_address)
-			WHERE username=? AND
-				(is_confirmed = 1
+			WHERE username=?
+				AND (
+					is_confirmed IS NOT NULL
 					OR (
-						(is_confirmed IS NULL OR is_confirmed = 0)
+						is_confirmed IS NULL
 						AND ${db.getUnixTimestamp('last_price_date')} > '${borderTimeout}'
 						AND device_address<>?
 						AND user_address<>?
@@ -661,9 +662,10 @@ function checkUsernameWasNotTaken(device_address, user_address, username, onDone
 		FROM receiving_addresses
 		LEFT JOIN transactions USING(receiving_address)
 		WHERE username=? AND
-			(is_confirmed = 1
+			AND (
+				is_confirmed IS NOT NULL
 				OR (
-					(is_confirmed IS NULL OR is_confirmed = 0)
+					is_confirmed IS NULL
 					AND ${db.getUnixTimestamp('last_price_date')} > '${borderTimeout}'
 					AND (
 						device_address<>?
