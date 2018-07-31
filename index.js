@@ -759,7 +759,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 
 function checkUsernamesReservationTimeout() {
 	const device = require('byteballcore/device.js');
-	const borderTimeout = Math.round(Date.now()/1000 - (conf.priceTimeout + conf.timeExpirationReervation));
+	const borderTimeout = Math.round(Date.now()/1000 - (conf.priceTimeout + conf.reminderTimeout));
 
 	db.query(
 		`SELECT
@@ -768,8 +768,7 @@ function checkUsernamesReservationTimeout() {
 			username
 		FROM receiving_addresses
 		LEFT JOIN transactions USING(receiving_address)
-		WHERE 
-			(is_confirmed IS NULL OR is_confirmed=0)
+		WHERE is_confirmed IS NULL
 			AND is_notified=0
 			AND ${db.getUnixTimestamp('last_price_date')} <= '${borderTimeout}'
 		`,
