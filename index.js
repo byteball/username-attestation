@@ -761,7 +761,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 
 function checkUsernamesReservationTimeout() {
 	const device = require('byteballcore/device.js');
-	const borderTimeout = Math.round(Date.now()/1000 - (conf.priceTimeout + conf.reminderTimeout));
+	const borderTimeout = Math.round(Date.now()/1000 - (conf.priceTimeout - conf.reminderTimeout));
 
 	db.query(
 		`SELECT
