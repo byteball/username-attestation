@@ -1,0 +1,30 @@
+{
+  "name": "byteball-username-attestation-bot",
+  "version": "1.0.0",
+  "description": "byteball username attestation bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/temikng/byteball-username-attestation-bot.git"
+  },
+  "keywords": [
+    "byteball",
+    "bot"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/temikng/byteball-username-attestation-bot/issues"
+  },
+  "homepage": "https://github.com/temikng/byteball-username-attestation-bot#readme",
+  "dependencies": {
+    "byteball-witness": "git+https://github.com/byteball/byteball-witness.git",
+    "byteballcore": "git+https://github.com/byteball/byteballcore.git",
+    "headless-byteball": "git+https://github.com/byteball/headless-byteball.git",
+    "i18n": "^0.8.3",
+    "emailjs": "1.0.10"
+  }
+}
