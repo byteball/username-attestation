@@ -2,7 +2,7 @@
   "name": "byteball-username-attestation-bot",
   "version": "1.0.0",
   "description": "byteball username attestation bot",
-  "main": "index.js",
+  "main": "attestation.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
