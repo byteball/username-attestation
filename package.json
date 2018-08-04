@@ -1,25 +1,27 @@
 {
-  "name": "byteball-username-attestation-bot",
+  "name": "username-attestation",
   "version": "1.0.0",
-  "description": "byteball username attestation bot",
+  "description": "A bot that sells usernames. Usernames allow to send money to @username instead of Byteball address.",
   "main": "attestation.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/temikng/byteball-username-attestation-bot.git"
+    "url": "git+https://github.com/byteball/username-attestation.git"
   },
   "keywords": [
     "byteball",
-    "bot"
+    "bot",
+    "attestation",
+    "username"
   ],
-  "author": "",
+  "author": "byteball",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/temikng/byteball-username-attestation-bot/issues"
+    "url": "https://github.com/byteball/username-attestation/issues"
   },
-  "homepage": "https://github.com/temikng/byteball-username-attestation-bot#readme",
+  "homepage": "https://github.com/byteball/username-attestation#readme",
   "dependencies": {
     "byteball-witness": "git+https://github.com/byteball/byteball-witness.git",
     "byteballcore": "git+https://github.com/byteball/byteballcore.git",
