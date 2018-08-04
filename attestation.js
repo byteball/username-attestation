@@ -657,7 +657,7 @@ function checkUsernameWasNotTaken(device_address, user_address, username, onDone
 			COUNT(receiving_address) AS count
 		FROM receiving_addresses
 		LEFT JOIN transactions USING(receiving_address)
-		WHERE username=? AND
+		WHERE username=?
 			AND (
 				is_confirmed IS NOT NULL
 				OR (
