@@ -826,9 +826,8 @@ function getUsernamePriceInBytes(username) {
 	const length = username.length;
 	let price = 0;
 	conf.arrPricesInBytesByUsernameLength.forEach(row => {
-		if (length >= row.threshold) {
-				price = row.price;
-		}
+		if (length >= row.threshold && row.price > price)
+			price = row.price;
 	});
 	return price;
 }
