@@ -415,11 +415,12 @@ function respond(from_address, text, response = '') {
 		}
 
 		function checkUsername(onDone) {
-			if (`@${userInfo.username}` === text) {
+			let potential_username = text.toLowerCase().replace(/^@/, '');
+			if (userInfo.username === potential_username) {
 				return onDone();
 			}
-			if (/^@[a-z\d\-_]{1,32}$/i.test(text)) {
-				const newUsername = text.substr(1);
+			if (/^[a-z\d\-_]{1,32}$/i.test(text)) {
+				const newUsername = potential_username;
 				const borderTimeout = Math.round(Date.now()/1000 - conf.priceTimeout);
 
 				return mutex.lock([`username-${newUsername}`], (unlock) => {
@@ -489,11 +490,9 @@ function respond(from_address, text, response = '') {
 
 				}); // mutex.lock
 			}
-			if (/^@.+$/.test(text)) {
-				return onDone(i18n.__('wrongUsernameFormat'));
-			}
-			if (userInfo.username) return onDone();
-			onDone(i18n.__('insertMyUsername'));
+			if (userInfo.username)
+				return onDone();
+			onDone(i18n.__(text ? 'wrongUsernameFormat' : 'insertMyUsername'));
 		} // function checkUsername
 
 		checkUserAddress(userAddressResponse => {
