@@ -426,6 +426,7 @@ function respond(from_address, text, response = '') {
 		function checkUserAddress(onDone) {
 			if (validationUtils.isValidAddress(text)) {
 				userInfo.user_address = text;
+				text = '';
 				response += i18n.__('goingToAttestAddress', {address: userInfo.user_address});
 				return db.query(
 					'UPDATE users SET user_address=? WHERE device_address=?',
@@ -435,7 +436,8 @@ function respond(from_address, text, response = '') {
 					}
 				);
 			}
-			if (userInfo.user_address) return onDone();
+			if (userInfo.user_address)
+				return onDone();
 			onDone(i18n.__('insertMyAddress'));
 		}
 
@@ -850,7 +852,7 @@ function getUsernamePriceInBytes(username) {
 	const length = username.length;
 	let price = 0;
 	conf.arrPricesInBytesByUsernameLength.forEach(row => {
-		if (length >= row.threshold && row.price > price)
+		if (length >= row.threshold)
 			price = row.price;
 	});
 	return price;
