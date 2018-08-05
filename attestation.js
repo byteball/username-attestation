@@ -380,7 +380,7 @@ function respond(from_address, text, response = '') {
 					from_address,
 					'text',
 					'➡ ' + getTxtCommandButton('Go back to language selection', 'select language') + '\n\n' +
-						i18n.__('greeting')
+						i18n.__('greeting', {priceLines: getPriceLines()})
 				);
 			}
 
@@ -394,7 +394,7 @@ function respond(from_address, text, response = '') {
 			device.sendMessageToDevice(
 				from_address,
 				'text',
-				i18n.__('greeting')
+				i18n.__('greeting', {priceLines: getPriceLines()})
 			);
 		}
 
@@ -829,4 +829,8 @@ function getUsernamePriceInBytes(username) {
 			price = row.price;
 	});
 	return price;
+}
+
+function getPriceLines(){
+	return conf.arrPricesInBytesByUsernameLength.map(row => i18n.__('priceLine', {minLength: row.threshold, price: row.price/1e9})).join(",\n")+'.';
 }
