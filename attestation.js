@@ -796,7 +796,7 @@ function checkUsernamesReservationTimeout() {
 		WHERE is_confirmed IS NULL
 			AND is_notified=0
 			AND ${db.getUnixTimestamp('last_price_date')} <= '${borderTimeout}'
-		`,
+			AND NOT EXISTS (SELECT 1 FROM receiving_addresses AS other_ra JOIN transactions USING(receiving_address) WHERE other_ra.user_address=receiving_addresses.user_address)`,
 		[],
 		(rows) => {
 			rows.forEach(row => {
