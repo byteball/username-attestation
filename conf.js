@@ -34,10 +34,9 @@ exports.MIN_AVAILABLE_WITNESSINGS = 100;
 // Username price
 exports.priceTimeout = 3600;
 exports.arrPricesInBytesByUsernameLength = [
-	{threshold: 3, price: 0},
-	{threshold: 4, price: 2050},
-	{threshold: 5, price: 1750},
-	{threshold: 7, price: 1450}
+	{threshold: 5, price: 10e9},
+	{threshold: 6, price: 3e9},
+	{threshold: 7, price: 1e9},
 ];
 
 exports.reminderTimeout = 120;
