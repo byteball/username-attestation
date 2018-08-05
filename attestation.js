@@ -185,7 +185,7 @@ function handleNewTransactions(arrUnits) {
 							() => {
 								unlock();
 								device.sendMessageToDevice(row.device_address, 'text',
-									i18n.__('receivedYourPayment', {receivedInGBytes: row.amount/1e9, username: row.username})
+									i18n.__('receivedYourPayment', {receivedInGB: row.amount/1e9, username: row.username})
 								);
 							}
 						);
@@ -219,10 +219,10 @@ function checkPayment(row, onDone) {
 				const priceInBytes = getUsernamePriceInBytes(row.username);
 	
 				if (row.amount < priceInBytes) {
-					let text = i18n.__('receivedLessThanExpected', {receivedInBytes: row.amount, priceInBytes: priceInBytes});
+					let text = i18n.__('receivedLessThanExpected', {receivedInGB: row.amount/1e9, priceInGB: priceInBytes/1e9});
 					return onDone(
 						text + '\n\n' +
-						i18n.__('pleasePay', {payButton: 'attestation payment'}) +
+						i18n.__('pleasePay', {btnLabel: 'attestation payment'}) +
 						getByteballPayButton(row.receiving_address, priceInBytes, row.user_address)
 					);
 				}
@@ -234,11 +234,11 @@ function checkPayment(row, onDone) {
 				db.query("SELECT address FROM unit_authors WHERE unit=?", [row.unit], (author_rows) => {
 					if (author_rows.length !== 1){
 						resetUserAddress();
-						return onDone(i18n.__('receivedPaymentFromMultipleAddresses') +"\n"+ i18n.__('switchToSingleAddress'));
+						return onDone(i18n.__('receivedPaymentFromMultipleAddresses') +" "+ i18n.__('switchToSingleAddress'));
 					}
 					if (author_rows[0].address !== row.user_address){
 						resetUserAddress();
-						return onDone(i18n.__('receivedPaymentNotFromExpectedAddress', {address:row.user_address}) +"\n"+ i18n.__('switchToSingleAddress'));
+						return onDone(i18n.__('receivedPaymentNotFromExpectedAddress', {address:row.user_address}) +" "+ i18n.__('switchToSingleAddress'));
 					}
 					onDone();
 				});
@@ -454,9 +454,9 @@ function respond(from_address, text, response = '') {
 			
 											const priceInBytes = getUsernamePriceInBytes(newUsername);
 											if (priceInBytes === 0) {
-												return onDoneLockedCheckUsername(i18n.__('usernameNotSell', {username: newUsername}));
+												return onDoneLockedCheckUsername(i18n.__('usernameNotOnSale', {username: newUsername}));
 											}
-											response += i18n.__('goingToAttestUsername', {username: newUsername, priceInBytes: priceInBytes/1e9});
+											response += i18n.__('goingToAttestUsername', {username: newUsername, priceInGB: priceInBytes/1e9});
 
 											userInfo.username = newUsername;
 
@@ -528,7 +528,7 @@ function respond(from_address, text, response = '') {
 									from_address,
 									'text',
 									(response ? response + '\n\n' : '') +
-										i18n.__('pleasePay', {payButton: 'attestation payment'}) +
+										i18n.__('pleasePay', {btnLabel: 'attestation payment'}) +
 										getByteballPayButton(receiving_address, priceInBytes, userInfo.user_address)
 								);
 							}
@@ -542,7 +542,7 @@ function respond(from_address, text, response = '') {
 								return device.sendMessageToDevice(
 									from_address,
 									'text',
-									(response ? response + '\n\n' : '') + i18n.__('receivedYourPayment', {receivedInGBytes: row.received_amount/1e9, username: userInfo.username})
+									(response ? response + '\n\n' : '') + i18n.__('receivedYourPayment', {receivedInGB: row.received_amount/1e9, username: userInfo.username})
 								);
 							}
 
@@ -563,7 +563,7 @@ function respond(from_address, text, response = '') {
 							return device.sendMessageToDevice(
 								from_address,
 								'text',
-								(response ? response + '\n\n' : '') + i18n.__('alreadyAttested', {username: userInfo.username, attestationDate: row.attestation_date})
+								(response ? response + '\n\n' : '') + i18n.__('usernameAlreadyAttested', {username: userInfo.username, attestationDate: row.attestation_date})
 							);
 
 						}
@@ -720,7 +720,7 @@ function checkUserUsernamesAreNotInPaymentConfirmation(device_address, user_addr
 function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_address, onDone) {
 	db.query(
 		`SELECT
-			COUNT(receiving_address) AS count
+			COUNT(DISTINCT receiving_address) AS count
 		FROM transactions
 		JOIN receiving_addresses USING(receiving_address)
 		WHERE device_address=?`,
@@ -729,7 +729,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 			if (rows.length) {
 				const row = rows[0];
 				if (row.count >= conf.maxUsernamesPerDevice) {
-					return onDone(i18n.__('deviceAttestedLimit', {limit: conf.maxUsernamesPerDevice}));
+					return onDone(i18n.__('usernamesPerDeviceLimit', {limit: conf.maxUsernamesPerDevice}));
 				}
 			}
 
@@ -744,7 +744,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 					if (rows.length) {
 						const row = rows[0];
 						if (row.count >= 1) {
-							return onDone(i18n.__('addressAttested'));
+							return onDone(i18n.__('addressAlreadyAttested'));
 						}
 					}
 
@@ -777,7 +777,7 @@ function checkUsernamesReservationTimeout() {
 				device.sendMessageToDevice(
 					row.device_address,
 					'text',
-					i18n.__('reservedWillExpiring', {username: row.username}),
+					i18n.__('reservationWillExpire', {username: row.username}),
 					{
 						ifOk: () => {
 
