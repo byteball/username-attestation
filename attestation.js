@@ -11,6 +11,8 @@ const usernameAttestation = require('./modules/username-attestation');
 const i18n = require('./modules/i18n');
 const texts = require('./modules/texts');
 
+let accumulationAddress;
+
 /**
  * user pairs his device with bot
  */
@@ -83,24 +85,30 @@ function handleWalletReady() {
 		}
 
 		headlessWallet.issueOrSelectAddressByIndex(0, 0, (address1) => {
-			console.log('== investor attestation address: ' + address1);
+			console.log('== username attestation address: ' + address1);
 			usernameAttestation.usernameAttestorAddress = address1;
 
-			setInterval(usernameAttestation.retryPostingAttestations, 10*1000);
-			setInterval(moveFundsToAttestorAddresses, 10*1000);
-			setInterval(checkUsernamesReservationTimeout, 60*1000);
-			
-			handleHeadlessReady();
+			headlessWallet.issueOrSelectAddressByIndex(0, 1, (address2) => {
+				console.log('== accumulation address: ' + address2);
+				accumulationAddress = address2;
+
+				setInterval(usernameAttestation.retryPostingAttestations, 10*1000);
+				setInterval(moveFundsToAccumulationAddress, 3600*1000);
+				setInterval(moveFundsToCFAddress, 7*24*3600*1000);
+				setInterval(checkUsernamesReservationTimeout, 60*1000);
+
+				handleHeadlessReady();
+			});
 		});
 	});
 }
 
-function moveFundsToAttestorAddresses() {
+function moveFundsToAccumulationAddress() {
 	let network = require('byteballcore/network.js');
 	if (network.isCatchingUp())
 		return;
 
-	console.log('moveFundsToAttestorAddresses');
+	console.log('moveFundsToAccumulationAddress');
 	db.query(
 		`SELECT DISTINCT receiving_address
 		FROM receiving_addresses 
@@ -110,17 +118,15 @@ function moveFundsToAttestorAddresses() {
 		LIMIT ?`,
 		[constants.MAX_AUTHORS_PER_UNIT],
 		(rows) => {
-			// console.error('moveFundsToAttestorAddresses', rows);
+			// console.error('moveFundsToAccumulationAddress', rows);
 			if (rows.length === 0) {
 				return;
 			}
 
 			const arrAddresses = rows.map(row => row.receiving_address);
-			// console.error(arrAddresses, usernameAttestation.usernameAttestorAddress);
-			const headlessWallet = require('headless-byteball');
 			headlessWallet.sendMultiPayment({
 				asset: null,
-				to_address: usernameAttestation.usernameAttestorAddress,
+				to_address: accumulationAddress,
 				send_all: true,
 				paying_addresses: arrAddresses
 			}, (err, unit) => {
@@ -137,6 +143,25 @@ function moveFundsToAttestorAddresses() {
 			});
 		}
 	);
+}
+
+function moveFundsToCFAddress() {
+	let network = require('byteballcore/network.js');
+	if (network.isCatchingUp())
+		return;
+
+	console.log('moveFundsToCFAddress');
+	headlessWallet.sendMultiPayment({
+		asset: null,
+		to_address: conf.cf_address,
+		send_all: true,
+		paying_addresses: [accumulationAddress]
+	}, (err, unit) => {
+		if (err)
+			console.error("failed to move funds to CF: " + err);
+		else
+			console.log("moved funds to CF, unit " + unit);
+	});
 }
 
 function handleNewTransactions(arrUnits) {

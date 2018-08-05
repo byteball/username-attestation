@@ -44,6 +44,8 @@ exports.reminderTimeout = 120;
 
 exports.maxUsernamesPerDevice = 5;
 
+exports.cf_address = 'H4HYSYYKPIEPDVMFLDZDDUFDL5EDN3O5';
+
 // Multilingual
 exports.isMultiLingual = true;
 
