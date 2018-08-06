@@ -1,6 +1,6 @@
 {
 	"selectLanguage": "Please select your language: ",
-	"greeting": "Here you can buy a username to be able to receive money at @username instead of a less user-friendly Byteball address.\n\nYour username will be linked to your Byteball address forever and nobody else will be able to reserve the same username.\n\nThe price of username depends on its length:\n\n{{priceLines}}\n\nThe payment is nonrefundable even if the attestation fails for any reason.",
+	"greeting": "Here you can buy a username to be able to receive money at @username instead of a less user-friendly Byteball address.\n\nYour username will be linked to your Byteball address forever and nobody else will be able to reserve the same username.\n\nThe price of username depends on its length:\n\n{{priceLines}}\n\nThe payment is nonrefundable even if the attestation fails for any reason.\n\nAll the proceeds from the sale of usernames go to Byteball Community Fund and help fund the promotion and development of the platform.",
 	"priceLine": "{{minLength}} or more characters: {{price}} GB",
 	"insertMyAddress": "Please send me your address that you wish to link to a username (click ... and Insert my address).\nMake sure you are in a single-address wallet. If you don't have a single-address wallet, please add one (burger menu, add wallet) and fund it with the amount sufficient to buy your username.",
 	"insertMyUsername": "Please send me the username that you wish to buy. It can contain only Latin letters, digits, \"-\", and \"_\".",
