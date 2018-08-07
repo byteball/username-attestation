@@ -23,7 +23,7 @@
 	"paymentIsAwaitingConfirmation": "Your payment for username \"{{username}}\" is awaiting confirmation. Please wait.",
 	"reservationWillExpire": "Your reservation of username \"{{username}}\" is going to expire within 1 minute.  If we don't receive the payment from you, the name will be released and can be bought by anybody else.",
 	"paymentIsConfirmed": "Your payment is confirmed.",
-	"inAttestation": "Username \"{{username}}\" is in attestation. Please wait.",
+	"inAttestation": "Username \"{{username}}\" is being attested. Please wait.",
 	"usernameAttested": "Now username \"{{username}}\" is linked to your BB address, see the attestation unit: https://explorer.byteball.org/#{{{unit}}}",
 	"usernameAlreadyAttested": "Username \"{{username}}\" was already linked to your BB address at {{attestationDate}} UTC."
 }
