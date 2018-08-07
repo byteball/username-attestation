@@ -6,6 +6,7 @@
 	"insertMyUsername": "Please send me the username that you wish to buy. It can contain only Latin letters, digits, \"-\", and \"_\".",
 	"wrongUsernameFormat": "Wrong username format! Please, try again.",
 	"paymentIsLate": "Your payment is too late!",
+	"bouncedPayment": "Sent back your payment less the bounce fee of {{bounce_fee}} bytes.",
 	"usernameNotOnSale": "Username \"{{username}}\" is not being sold now as it is too short. Please choose another.",
 	"usernameTaken": "Username \"{{username}}\" is already taken. Please choose another.",
 	"addressAlreadyAttested": "Your BB address is already linked to a username. You can create another wallet and buy a username for it.",

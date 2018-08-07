@@ -11,6 +11,8 @@ const usernameAttestation = require('./modules/username-attestation');
 const i18n = require('./modules/i18n');
 const texts = require('./modules/texts');
 
+const BOUNCE_FEE = 10000;
+
 let accumulationAddress;
 
 /**
@@ -231,6 +233,7 @@ function checkPayment(row, onDone) {
 
 	checkPaymentIsLate(row, (text) => {
 		if (text) {
+			bouncePayment(row);
 			return onDone(text);
 		}
 
@@ -315,6 +318,27 @@ function checkPaymentIsLate(row, onDone) {
 	onDone();
 }
 
+function bouncePayment(row){
+	const device = require('byteballcore/device.js');
+	if (row.amount < BOUNCE_FEE + 1000)
+		return console.log("amount "+row.amount+" is too small to bounce");
+	headlessWallet.sendMultiPayment({
+		asset: null,
+		to_address: row.user_address,
+		amount: row.amount - BOUNCE_FEE,
+		change_address: accumulationAddress,
+		paying_addresses: [row.receiving_address],
+		spend_unconfirmed: 'all'
+	}, (err, unit) => {
+		if (err)
+			console.error("failed to bounce to "+row.user_address+": " + err);
+		else{
+			console.log("bounced payment to "+row.user_address+", unit " + unit);
+			device.sendMessageToDevice(row.device_address, 'text', i18n.__('bouncedPayment', {bounce_fee: BOUNCE_FEE}));
+		}
+	});
+}
+
 function handleTransactionsBecameStable(arrUnits) {
 	const device = require('byteballcore/device.js');
 	db.query(
@@ -363,7 +387,8 @@ function handleTransactionsBecameStable(arrUnits) {
 									usernameAttestation.usernameAttestorAddress,
 									attestationPayload
 								);
-
+								
+								db.query("UPDATE users SET user_address=NULL, username=NULL WHERE device_address=?", [device_address]);
 							}
 						);
 
@@ -429,9 +454,10 @@ function respond(from_address, text, response = '') {
 				text = '';
 				response += i18n.__('goingToAttestAddress', {address: userInfo.user_address});
 				return db.query(
-					'UPDATE users SET user_address=? WHERE device_address=?',
+					'UPDATE users SET user_address=?, username=NULL WHERE device_address=?',
 					[userInfo.user_address, from_address],
 					() => {
+						userInfo.username = null;
 						onDone();
 					}
 				);
