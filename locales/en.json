@@ -5,7 +5,7 @@
 	"insertMyAddress": "Please send me your address that you wish to link to a username (click ... and Insert my address).\nMake sure you are in a single-address wallet. If you don't have a single-address wallet, please add one (burger menu, add wallet) and fund it with the amount sufficient to buy your username.",
 	"insertMyUsername": "Please send me the username that you wish to buy. It can contain only Latin letters, digits, \"-\", and \"_\".",
 	"wrongUsernameFormat": "Wrong username format! Please, try again.",
-	"priceTimeout": "Your payment is too late!",
+	"paymentIsLate": "Your payment is too late!",
 	"usernameNotOnSale": "Username \"{{username}}\" is not being sold now as it is too short. Please choose another.",
 	"usernameTaken": "Username \"{{username}}\" is already taken. Please choose another.",
 	"addressAlreadyAttested": "Your BB address is already linked to a username. You can create another wallet and buy a username for it.",

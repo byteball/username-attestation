@@ -301,7 +301,7 @@ function checkPaymentIsLate(row, onDone) {
 				if (rows.length) {
 					if (rows[0].count) {
 						return onDone(
-							i18n.__('priceTimeout') + '\n' +
+							i18n.__('paymentIsLate') + '\n' +
 							i18n.__('usernameTaken', { username: row.username })
 						);
 					}
