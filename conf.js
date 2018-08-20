@@ -50,4 +50,11 @@ exports.isMultiLingual = true;
 
 exports.languagesAvailable = {
 	en: {name: "English", file: "en"},
+	da: {name: "Dansk", file: "username-attestation_da-DK"},
+	el: {name: "Ελληνικά", file: "username-attestation_el-GR"},
+	et: {name: "Eesti", file: "username-attestation_et-EE"},
+	it: {name: "Italiano", file: "username-attestation_it-IT"},
+	ja: {name: "日本語", file: "username-attestation_ja-JP"},
+	uk: {name: "Українська", file: "username-attestation_uk-UA"},
+	vi: {name: "Tiếng Việt", file: "username-attestation_vi-VN"}
 };
