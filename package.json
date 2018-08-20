@@ -4,7 +4,7 @@
 	"description": "A bot that sells usernames. Usernames allow to send money to @username instead of Byteball address.",
 	"main": "attestation.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "node test/locales.js"
 	},
 	"repository": {
 		"type": "git",
