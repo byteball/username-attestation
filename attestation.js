@@ -173,10 +173,11 @@ function handleNewTransactions(arrUnits) {
 	db.query(
 		`SELECT
 			amount, asset, unit,
-			receiving_address, device_address, user_address, username, price,
+			receiving_address, device_address, receiving_addresses.user_address, receiving_addresses.username, price, lang,
 			${db.getUnixTimestamp('last_price_date')} AS price_ts
 		FROM outputs
 		CROSS JOIN receiving_addresses ON receiving_addresses.receiving_address = outputs.address
+		CROSS JOIN users USING(device_address)
 		WHERE unit IN(?)
 			AND NOT EXISTS (
 				SELECT 1
@@ -211,6 +212,7 @@ function handleNewTransactions(arrUnits) {
 							[row.receiving_address, row.price, row.amount, row.unit],
 							() => {
 								unlock();
+								i18n.setLocale(row.lang);
 								device.sendMessageToDevice(row.device_address, 'text',
 									i18n.__('receivedYourPayment', {receivedInGB: row.amount/1e9, username: row.username})
 								);
@@ -228,6 +230,7 @@ function handleNewTransactions(arrUnits) {
 
 function checkPayment(row, onDone) {
 	if (row.asset !== null) {
+		i18n.setLocale(row.lang);
 		return onDone(i18n.__('wrongAsset'));
 	}
 
@@ -247,6 +250,7 @@ function checkPayment(row, onDone) {
 				const priceInBytes = getUsernamePriceInBytes(row.username);
 	
 				if (row.amount < priceInBytes) {
+					i18n.setLocale(row.lang);
 					let text = i18n.__('receivedLessThanExpected', {receivedInGB: row.amount/1e9, priceInGB: priceInBytes/1e9});
 					return onDone(
 						text + '\n\n' +
@@ -262,10 +266,12 @@ function checkPayment(row, onDone) {
 				db.query("SELECT address FROM unit_authors WHERE unit=?", [row.unit], (author_rows) => {
 					if (author_rows.length !== 1){
 						resetUserAddress();
+						i18n.setLocale(row.lang);
 						return onDone(i18n.__('receivedPaymentFromMultipleAddresses') +" "+ i18n.__('switchToSingleAddress'));
 					}
 					if (author_rows[0].address !== row.user_address){
 						resetUserAddress();
+						i18n.setLocale(row.lang);
 						return onDone(i18n.__('receivedPaymentNotFromExpectedAddress', {address:row.user_address}) +" "+ i18n.__('switchToSingleAddress'));
 					}
 					onDone();
@@ -303,6 +309,7 @@ function checkPaymentIsLate(row, onDone) {
 			(rows) => {
 				if (rows.length) {
 					if (rows[0].count) {
+						i18n.setLocale(row.lang);
 						return onDone(
 							i18n.__('paymentIsLate') + '\n' +
 							i18n.__('usernameTaken', { username: row.username })
@@ -334,6 +341,7 @@ function bouncePayment(row){
 			console.error("failed to bounce to "+row.user_address+": " + err);
 		else{
 			console.log("bounced payment to "+row.user_address+", unit " + unit);
+			i18n.setLocale(row.lang);
 			device.sendMessageToDevice(row.device_address, 'text', i18n.__('bouncedPayment', {bounce_fee: BOUNCE_FEE}));
 		}
 	});
@@ -344,10 +352,11 @@ function handleTransactionsBecameStable(arrUnits) {
 	db.query(
 		`SELECT 
 			transaction_id, payment_unit,
-			device_address, user_address, 
-			username
+			device_address, receiving_addresses.user_address, 
+			receiving_addresses.username, lang
 		FROM transactions
 		JOIN receiving_addresses USING(receiving_address)
+		JOIN users USING(device_address)
 		WHERE payment_unit IN(?)`,
 		[arrUnits],
 		(rows) => {
@@ -357,6 +366,7 @@ function handleTransactionsBecameStable(arrUnits) {
 					device_address,
 					user_address, 
 					username,
+					lang
 				} = row;
 
 				db.query(
@@ -365,6 +375,7 @@ function handleTransactionsBecameStable(arrUnits) {
 					WHERE transaction_id=?`,
 					[transaction_id],
 					() => {
+						i18n.setLocale(lang);
 						device.sendMessageToDevice(device_address, 'text',
 							i18n.__('paymentIsConfirmed') + '\n\n' +
 							i18n.__('inAttestation', {username})
