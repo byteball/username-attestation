@@ -51,10 +51,17 @@ exports.isMultiLingual = true;
 exports.languagesAvailable = {
 	en: {name: "English", file: "en"},
 	da: {name: "Dansk", file: "username-attestation_da-DK"},
+	de: {name: "Deutsch", file: "username-attestation_de-DE"},
 	el: {name: "Ελληνικά", file: "username-attestation_el-GR"},
 	et: {name: "Eesti", file: "username-attestation_et-EE"},
 	it: {name: "Italiano", file: "username-attestation_it-IT"},
 	ja: {name: "日本語", file: "username-attestation_ja-JP"},
+	ko: {name: "한국어", file: "username-attestation_ko-KR"},
+	nl: {name: "Nederlands", file: "username-attestation_nl-NL"},
+	pl: {name: "Polski", file: "username-attestation_pl-PL"},
+	ru: {name: "Русский", file: "username-attestation_ru-RU"},
 	uk: {name: "Українська", file: "username-attestation_uk-UA"},
-	vi: {name: "Tiếng Việt", file: "username-attestation_vi-VN"}
+	vi: {name: "Tiếng Việt", file: "username-attestation_vi-VN"},
+	yo: {name: "Yorùbá", file: "username-attestation_yo-NG"},
+	zh: {name: "中文", file: "username-attestation_zh-CN"}
 };
