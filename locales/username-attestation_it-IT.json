@@ -1,6 +1,6 @@
 {
 	"selectLanguage": "Per favore seleziona la tua lingua: ",
-	"greeting": "Qui puoi acquistare uno username per poter ricevere denaro direttamente su @username invece che su un indirizzo Byteball meno user-friendly.\n\nIl tuo username sarà collegato al tuo indirizzo Byteball per sempre e nessun altro sarà in grado di utilizzare/occupare lo stesso username.\n\nIl prezzo dello username dipende dalla sua lunghezza:\n\n{{priceLines}}\n\nIl pagamento non è rimborsabile anche se l'attestation fallisce per qualsiasi motivo.\n\nTutti i proventi della vendita degli username vanno al Byteball Community Fund ed aiutano a finanziare la promozione e lo sviluppo della piattaforma.",
+	"greeting": "Qui puoi acquistare uno username per poter ricevere denaro direttamente su @username invece che su un indirizzo  meno user-friendly.\n\nIl tuo username sarà collegato al tuo indirizzo  per sempre e nessun altro sarà in grado di utilizzare/occupare lo stesso username.\n\nIl prezzo dello username dipende dalla sua lunghezza:\n\n{{priceLines}}\n\nIl pagamento non è rimborsabile anche se l'attestation fallisce per qualsiasi motivo.\n\nTutti i proventi della vendita degli username vanno al  Community Fund ed aiutano a finanziare la promozione e lo sviluppo della piattaforma.",
 	"priceLine": "{{minLength}} oppure più caratteri: {{price}} GB",
 	"insertMyAddress": "Perfavore inviami il tuo indirizzo che desideri collegare allo username (clicca ... ed \"Inserisci il mio indirizzo\").\nAssicurati di essere in un portafoglio ad indirizzo singolo. Se non si dispone di un portafoglio con indirizzo singolo, perfavore aggiungine uno (clicca sul menu a forma di hamburger, poi \"Aggiungi portafoglio\") e finanzialo con l'importo sufficiente per pagare il tuo username.",
 	"insertMyUsername": "Perfavore inviami lo username che desideri acquistare. Può contenere solo lettere latine, cifre, \"-\", e \"_\".",
@@ -11,7 +11,7 @@
 	"usernameTaken": "Lo username \"{{username}}\" è già in uso. Per favore scegline un altro.",
 	"addressAlreadyAttested": "Il tuo indirizzo BB è già collegato ad uno username. Puoi creare un altro portafoglio ed acquistare un nuovo username da collegare.",
 	"usernamesPerDeviceLimit": "Puoi acquistare solo fino a {{limit}} username per ogni dispositivo!",
-	"goingToAttestAddress": "Grazie, stiamo collegando il tuo indirizzo Byteball: {{address}}.",
+	"goingToAttestAddress": "Grazie, stiamo collegando il tuo indirizzo : {{address}}.",
 	"goingToAttestUsername": "Grazie, stiamo collegando lo username \"{{username}}\" al tuo indirizzo BB.\nIl prezzo è di {{priceInGB}} GB. Lo username viene riservato per 1 ora in attesa del pagamento.",
 	"pleasePay": "Per favore paga per lo username: [{{btnLabel}}]",
 	"wrongAsset": "Pagamento ricevuto nell'asset sbagliato",
@@ -24,6 +24,6 @@
 	"reservationWillExpire": "La tua prenotazione dello username \"{{username}}\" scade fra 1 minuto. Se non riceviamo il tuo pagamento, lo username verrà reso nuovamente disponibile e potrà essere acquistato da qualsiasi altra persona.",
 	"paymentIsConfirmed": "Il tuo pagamento è confermato.",
 	"inAttestation": "Lo username \"{{username}}\" è in corso di attestazione. Attendere prego.",
-	"usernameAttested": "Ora lo username \"{{username}}\" è collegato al tuo indirizzo BB, vedi l'attestation unit: https://explorer.byteball.org/#{{{unit}}}",
+	"usernameAttested": "Ora lo username \"{{username}}\" è collegato al tuo indirizzo BB, vedi l'attestation unit: https://explorer.obyte.org/#{{{unit}}}",
 	"usernameAlreadyAttested": "Lo username \"{{username}}\" è stato già collegato al tuo indirizzo BB alle {{attestationDate}} UTC."
 }

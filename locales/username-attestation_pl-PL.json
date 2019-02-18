@@ -1,6 +1,6 @@
 {
 	"selectLanguage": "Wybierz swój język: ",
-	"greeting": "Tutaj możesz zakupić swoją nazwę użytkownika, aby móc otrzymywać pieniądze na @username, zamiast na mniej przyjazny dla użytkownika adres Byteball.\n\nTwoja nazwa użytkownika będzie na zawsze powiązana z Twoim adresem Byteball. Nikt inny nie będzie mógł zarezerwować takiej samej nazwy użytkownika, jak twoja.\n\nCena nazwy użytkownika zależy od jej długości:\n\n{{priceLines}}\n\nPłatność nie podlega zwrotowi, nawet jeśli zaświadczenie nie powiedzie się z jakiegokolwiek powodu.\n\nWszystkie wpływy ze sprzedaży nazw użytkowników trafiają do Byteball Community Fund. Środki te pomagają w finansowaniu promocji i w rozwoju platformy.",
+	"greeting": "Tutaj możesz zakupić swoją nazwę użytkownika, aby móc otrzymywać pieniądze na @username, zamiast na mniej przyjazny dla użytkownika adres Obyte.\n\nTwoja nazwa użytkownika będzie na zawsze powiązana z Twoim adresem Obyte. Nikt inny nie będzie mógł zarezerwować takiej samej nazwy użytkownika, jak twoja.\n\nCena nazwy użytkownika zależy od jej długości:\n\n{{priceLines}}\n\nPłatność nie podlega zwrotowi, nawet jeśli zaświadczenie nie powiedzie się z jakiegokolwiek powodu.\n\nWszystkie wpływy ze sprzedaży nazw użytkowników trafiają do Obyte Community Fund. Środki te pomagają w finansowaniu promocji i w rozwoju platformy.",
 	"priceLine": "{{minLength}} lub więcej znaków: {{price}} GB",
 	"insertMyAddress": "Prześlij mi swój adres, który chcesz połączyć z nazwą użytkownika (kliknij ... i Wstaw mój adres).\nUpewnij się, że jesteś w portfelu z jednym adresem. Jeśli nie masz portfela z jednym adresem, dodaj jedno (menu burger, dodaj portfel) i sfinansuj je w kwocie wystarczającej na zakup nazwy użytkownika.",
 	"insertMyUsername": "Prześlij mi nazwę użytkownika, którą chcesz kupić. Może zawierać tylko łacińskie litery, cyfry, \"-\" i \"_\".",
@@ -11,7 +11,7 @@
 	"usernameTaken": "Nazwa użytkownika \"{{username}}\" jest już zajęta. Proszę wybrać inną.",
 	"addressAlreadyAttested": "Twój adres BB jest już połączony z nazwą użytkownika. Możesz stworzyć inny portfel i kupić dla niego nazwę użytkownika.",
 	"usernamesPerDeviceLimit": "Możesz kupić maksymalnie do {{limit}} nazw użytkowników na jedno urządzenie!",
-	"goingToAttestAddress": "Dzięki, teraz przypiszę twój adres Byteball: {{address}}.",
+	"goingToAttestAddress": "Dzięki, teraz przypiszę twój adres Obyte: {{address}}.",
 	"goingToAttestUsername": "Teraz przypiszę nazwę użytkownika \"{{username}}\" do twojego adresu BB.\nCena wynosi {{priceInGB}} GB. Nazwa użytkownika jest zarezerwowana na 1 godzinę, podczas gdy oczekujemy na płatność.",
 	"pleasePay": "Zapłać za nazwę użytkownika: [{{btnLabel}}]",
 	"wrongAsset": "Otrzymano płatność w złej walucie",
@@ -24,6 +24,6 @@
 	"reservationWillExpire": "Twoja rezerwacja nazwy użytkownika \"{{username}}\" wygaśnie w ciągu 1 minuty. Jeśli nie otrzymamy płatności od Ciebie, nazwa zostanie zwolniona z rezerwacji, a każdy inny będzie mógł ją kupić.",
 	"paymentIsConfirmed": "Twoja płatność jest potwierdzona.",
 	"inAttestation": "Nazwa użytkownika \"{{username}}\" jest w trakcie uwierzytelniania. Proszę czekać.",
-	"usernameAttested": "Teraz nazwa użytkownika \"{{username}}\" jest przypisana do Twojego adresu BB, zobacz jednostkę uwierzytelniającą: https://explorer.byteball.org/#{{{unit}}}",
+	"usernameAttested": "Teraz nazwa użytkownika \"{{username}}\" jest przypisana do Twojego adresu BB, zobacz jednostkę uwierzytelniającą: https://explorer.obyte.org/#{{{unit}}}",
 	"usernameAlreadyAttested": "Nazwa użytkownika \"{{username}}\" została już powiązana z twoim adresem BB o {{attestationDate}} UTC."
 }

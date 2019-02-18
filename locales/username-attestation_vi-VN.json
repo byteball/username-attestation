@@ -1,6 +1,6 @@
 {
 	"selectLanguage": "Vui lòng chọn ngôn ngữ của bạn: ",
-	"greeting": "Tại đây bạn có thể đặt mua tên người dùng để có thể nhận tiền tại @username thay vì dùng địa chỉ Byteball ít thân thiện với người dùng hơn.\n\nVới tên người dùng của bạn sẽ được liên kết với địa chỉ Byteball của bạn mãi mãi và không ai khác có thể sử dụng tên trùng lập với bạn.\n\nGiá của tên người dùng phụ thuộc vào độ dài của nó:\n\n{{priceLines}}\n\nKhoản thanh toán không bồi hoàn kể cả khi lý do chứng thực không thành công vì bất kỳ lý do gì.\n\nTất cả số tiền thu được từ việc bán tên người dùng được đưa đến Quỹ Cộng đồng Byteball và để giúp tài trợ cho việc quảng cáo và phát triển nền tảng này.",
+	"greeting": "Tại đây bạn có thể đặt mua tên người dùng để có thể nhận tiền tại @username thay vì dùng địa chỉ Obyte ít thân thiện với người dùng hơn.\n\nVới tên người dùng của bạn sẽ được liên kết với địa chỉ Obyte của bạn mãi mãi và không ai khác có thể sử dụng tên trùng lập với bạn.\n\nGiá của tên người dùng phụ thuộc vào độ dài của nó:\n\n{{priceLines}}\n\nKhoản thanh toán không bồi hoàn kể cả khi lý do chứng thực không thành công vì bất kỳ lý do gì.\n\nTất cả số tiền thu được từ việc bán tên người dùng được đưa đến Quỹ Cộng đồng Obyte và để giúp tài trợ cho việc quảng cáo và phát triển nền tảng này.",
 	"priceLine": "{{minLength}} hoặc nhiều ký tự: {{price}} GB",
 	"insertMyAddress": "Vui lòng gửi cho tôi địa chỉ của bạn mà bạn muốn liên kết với tên người dùng (nhấp vào ... và Chèn địa chỉ của tôi).\nHãy chắc chắn rằng bạn đang ở trong ví địa chỉ riêng lẻ (Single-address). Nếu bạn không có một ví địa chỉ riêng lẽ, vui lòng thêm một ví (menu burger, thêm ví) và nạp tiền với số tiền đủ để mua tên người dùng của bạn.",
 	"insertMyUsername": "Vui lòng gửi cho tôi tên người dùng mà bạn muốn mua. Chỉ có thể sử dụng chữ cái Latinh, chữ số, \"-\" và \"_\".",
@@ -11,7 +11,7 @@
 	"usernameTaken": "Tên người dùng \"{{username}}\" đã được sử dụng. Vui lòng chọn tên khác.",
 	"addressAlreadyAttested": "Địa chỉ BB của bạn đã được liên kết với tên người dùng. Bạn có thể tạo một ví khác và mua tên người dùng cho nó.",
 	"usernamesPerDeviceLimit": "Bạn chỉ có thể mua tối đa {{limit}} tên người dùng cho mỗi một thiết bị!",
-	"goingToAttestAddress": "Cảm ơn, sẽ liên kết địa chỉ Byteball của bạn: {{address}}.",
+	"goingToAttestAddress": "Cảm ơn, sẽ liên kết địa chỉ Obyte của bạn: {{address}}.",
 	"goingToAttestUsername": "Cảm ơn, sẽ liên kết tên người dùng \"{{username}}\" với địa chỉ BB của bạn.\nGiá là {{priceInGB}} GB. Tên người dùng được giữ riêng cho bạn trong 1 giờ trong khi chúng tôi chờ thanh toán.",
 	"pleasePay": "Xin vui lòng thanh toán cho tên người dùng: [{{btnLabel}}]",
 	"wrongAsset": "Đã nhận thanh toán với tài sản không hợp lệ",
@@ -24,6 +24,6 @@
 	"reservationWillExpire": "Việc đặt tên người dùng của bạn \"{{username}}\" sẽ hết hạn trong vòng 1 phút. Nếu chúng tôi không nhận được thanh toán từ bạn, tên sẽ được nhượng lại và có thể được mua bởi bất kỳ ai khác.",
 	"paymentIsConfirmed": "Thanh toán của bạn được xác nhận.",
 	"inAttestation": "Tên người dùng \"{{username}}\" đang được xác thực. Vui lòng đợi.",
-	"usernameAttested": "Bây giờ tên người dùng \"{{username}}\" đã được liên kết với địa chỉ BB của bạn, hãy xem đơn vị xác nhận: https://explorer.byteball.org/#{{{unit}}}",
+	"usernameAttested": "Bây giờ tên người dùng \"{{username}}\" đã được liên kết với địa chỉ BB của bạn, hãy xem đơn vị xác nhận: https://explorer.obyte.org/#{{{unit}}}",
 	"usernameAlreadyAttested": "Tên người dùng \"{{username}}\" đã được liên kết với địa chỉ BB của bạn tại {{attestationDate}} UTC."
 }

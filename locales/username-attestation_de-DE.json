@@ -1,6 +1,6 @@
 {
 	"selectLanguage": "Bitte wählen Sie Ihre Sprache: ",
-	"greeting": "Hier können Sie einen Benutzernamen erwerben, um Geld an @Benutzername zu erhalten, statt der weniger benutzerfreundlichen Byteball-Adresse.\n\nIhr Benutzername wird für immer mit Ihrer Byteball-Adresse verlinkt und kein anderer wird fähig sein denselben Benutzernamen zu reservieren.\n\nDer Preis eines Benutzernamens hängt von seiner Länge ab:\n\n{{priceLines}}\n\nDie Bezahlung kann nicht erstattet werden, auch wenn die Bestätigung aus irgendeinem Grund fehlschlagen sollte.\n\nAlle Erlöse des Verkaufs von Benutzernamen gehen in den Byteball-Community-Fond und helfen, die Promotion und Entwicklung der Plattform zu finanzieren.",
+	"greeting": "Hier können Sie einen Benutzernamen erwerben, um Geld an @Benutzername zu erhalten, statt der weniger benutzerfreundlichen Obyte-Adresse.\n\nIhr Benutzername wird für immer mit Ihrer Obyte-Adresse verlinkt und kein anderer wird fähig sein denselben Benutzernamen zu reservieren.\n\nDer Preis eines Benutzernamens hängt von seiner Länge ab:\n\n{{priceLines}}\n\nDie Bezahlung kann nicht erstattet werden, auch wenn die Bestätigung aus irgendeinem Grund fehlschlagen sollte.\n\nAlle Erlöse des Verkaufs von Benutzernamen gehen in den Obyte-Community-Fond und helfen, die Promotion und Entwicklung der Plattform zu finanzieren.",
 	"priceLine": "{{minLength}} oder mehr Zeichen: {{price}} GB",
 	"insertMyAddress": "Bitte senden Sie mir die Adresse, die Sie bestätigen möchten (klicken Sie ... und geben Sie Ihre Adresse ein).\nStellen Sie sicher, dass Sie ein Single-Address-Wallet verwenden. Sofern Sie kein Single-Address-Wallet besitzen, fügen Sie bitte eines hinzu (Menü, Wallet hinzufügen) und statten Sie es mit ausreichenden Mitteln aus, um einen Benutzernamen zu erwerben.",
 	"insertMyUsername": "Bitte senden Sie mir den Benutzernamen, den Sie erwerben möchten. Er kann nur lateinische Buchstaben, Ziffern, \"-\", und \"_\" enthalten.",
@@ -11,7 +11,7 @@
 	"usernameTaken": "Der Benutzername \"{{username}}\" ist bereits vergeben. Bitte wählen Sie einen anderen.",
 	"addressAlreadyAttested": "Ihre BB-Adresse ist bereits mit einem Benutzernamen verlinkt. Sie können ein anderes Wallet erstellen und einen Benutzernamen für dieses kaufen.",
 	"usernamesPerDeviceLimit": "Sie können nur bis zu {{limit}} Benutzernamen pro Gerät erwerben!",
-	"goingToAttestAddress": "Danke, ich werde Ihre Byteball-Adresse {{address}} verlinken.",
+	"goingToAttestAddress": "Danke, ich werde Ihre Obyte-Adresse {{address}} verlinken.",
 	"goingToAttestUsername": "Danke, ich werde Ihren Benutzernamen \"{{username}}\" zu Ihrer BB-Adresse verlinken.\nDer Preis beträgt {{priceInGB}} GB. Der Benutzername ist für eine Stunde reserviert, während wir auf die Zahlung warten.",
 	"pleasePay": "Bitte zahlen Sie für den Benutzernamen: [{{btnLabel}}]",
 	"wrongAsset": "Zahlung im falschen Asset erhalten",
@@ -24,6 +24,6 @@
 	"reservationWillExpire": "Ihre Reservierung des Benutzernamens \"{{username}}\" wird in einer Minute auslaufen. Falls wir keine Zahlung von Ihnen erhalten, wird der Benutzername freigegeben und kann von jedermann erworben werden.",
 	"paymentIsConfirmed": "Ihre Zahlung wurde bestätigt.",
 	"inAttestation": "Benutzername \"{{username}}\" wird bestätigt. Bitte warten Sie.",
-	"usernameAttested": "Jetzt ist der Benutzername \"{{username}}\" zu Ihrer BB-Adresse verlinkt, schauen Sie sich Ihren Bestätigungseintrag an: https://explorer.byteball.org/#{{{unit}}}",
+	"usernameAttested": "Jetzt ist der Benutzername \"{{username}}\" zu Ihrer BB-Adresse verlinkt, schauen Sie sich Ihren Bestätigungseintrag an: https://explorer.obyte.org/#{{{unit}}}",
 	"usernameAlreadyAttested": "Der Benutzername \"{{username}}\" wurde bereits zu Ihrer BB-Adresse am {{attestationDate}} UTC verlinkt."
 }

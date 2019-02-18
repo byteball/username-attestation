@@ -1,6 +1,6 @@
 /*jslint node: true */
 'use strict';
-const desktopApp = require('byteballcore/desktop_app.js');
+const desktopApp = require('ocore/desktop_app.js');
 
 exports.errorInitSql = () => {
 	return "please import db.sql file\n";

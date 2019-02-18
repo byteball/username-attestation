@@ -24,6 +24,6 @@
 	"reservationWillExpire": "사용자 이름 \"{{username}}\"에 대한 예약이 1 분 안에 종료될 예정입니다. 결제를 완료하지 않으면, 다른 사람이 구매할 수 있게 이 사용자 이름에 대한 예약이 해제될 것입니다.",
 	"paymentIsConfirmed": "결제가 확인되었습니다.",
 	"inAttestation": "사용자 이름 \"{{username}}\" 에 대한 인증이 진행 중입니다. 잠시만 기다려주세요.",
-	"usernameAttested": "이제 사용자 이름 \"{{username}}\"이 바이트볼 주소와 연결되었습니다. 인증 유닛은 이곳에서 확인하실 수 있습니다: https://explorer.byteball.org/#{{{unit}}}",
+	"usernameAttested": "이제 사용자 이름 \"{{username}}\"이 바이트볼 주소와 연결되었습니다. 인증 유닛은 이곳에서 확인하실 수 있습니다: https://explorer.obyte.org/#{{{unit}}}",
 	"usernameAlreadyAttested": "사용자 이름 \"{{username}}\"은 {{attestationDate}} UTC 시점에 이미 바이트볼 주소와 연결되었습니다."
 }

@@ -2,7 +2,7 @@
 /*jslint node: true */
 'use strict';
 const path = require('path');
-const conf = require('byteballcore/conf');
+const conf = require('ocore/conf');
 const i18nModule = require('i18n');
 
 const languagesAvailable = conf.languagesAvailable;

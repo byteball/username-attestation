@@ -1,6 +1,6 @@
 {
 	"selectLanguage": "Vælg sprog: ",
-	"greeting": "Her kan du købe et brugernavn for at kunne modtage betalinger til @brugernavn i stedet for den knapt så brugervenlige Byteball-adresse.\n\nDit brugernavn bliver linket til din Byteball-adresse for evigt og ingen andre vil kunne reservere det samme brugernavn.\n\nPrisen for registrering af brugernavne afhænger af længden:\n\n{{priceLines}}\n\nBetalingen kan ikke refunderes, selv ikke hvis registreringen af en eller anden årsag fejler.\n\nAlle indtægter fra salget af brugernavne går til Byteball Community Fund og bidrager til at finansiere markedsføring og udvikling af platformen.",
+	"greeting": "Her kan du købe et brugernavn for at kunne modtage betalinger til @brugernavn i stedet for den knapt så brugervenlige Obyte-adresse.\n\nDit brugernavn bliver linket til din Obyte-adresse for evigt og ingen andre vil kunne reservere det samme brugernavn.\n\nPrisen for registrering af brugernavne afhænger af længden:\n\n{{priceLines}}\n\nBetalingen kan ikke refunderes, selv ikke hvis registreringen af en eller anden årsag fejler.\n\nAlle indtægter fra salget af brugernavne går til Obyte Community Fund og bidrager til at finansiere markedsføring og udvikling af platformen.",
 	"priceLine": "{{minLength}} eller flere tegn: {{price}} GB",
 	"insertMyAddress": "Indsæt den adresse, du ønsker at knytte et brugernavn til (Tryk '...' og Indsæt min adresse).\nSørg for at du vælger en single-address wallet. Har du ikke en single-address wallet, kan du tilføje en (burgermenuen, tilføj wallet) og sende penge til købet af brugernavn til den.",
 	"insertMyUsername": "Angiv dét brugernavn, du ønsker at købe. Det kan kun indeholde latinske bogstaver, tal, bindestreg og underscore.",
@@ -11,8 +11,8 @@
 	"usernameTaken": "Brugernavnet \"{{username}}\" er allerede taget. Vælg et andet.",
 	"addressAlreadyAttested": "Din adresse er allerede knyttet til et brugernavn. Du kan oprette en ny wallet og købe et andet brugernavn til den.",
 	"usernamesPerDeviceLimit": "Du kan højst købe {{limit}} brugernavne pr. enhed!",
-	"goingToAttestAddress": "Tak. Jeg vil linke til Byteball adressen: {{address}}.",
-	"goingToAttestUsername": "Tak, jeg vil linke brugernavnet \"{{username}}\" til din Byteball adresse.\nPrisen er {{priceInGB}} GB. Brugernavnet er nu reserveret i 1 time mens jeg venter på betalingen.",
+	"goingToAttestAddress": "Tak. Jeg vil linke til Obyte adressen: {{address}}.",
+	"goingToAttestUsername": "Tak, jeg vil linke brugernavnet \"{{username}}\" til din Obyte adresse.\nPrisen er {{priceInGB}} GB. Brugernavnet er nu reserveret i 1 time mens jeg venter på betalingen.",
 	"pleasePay": "Betal venligst for brugernavnet: [{{btnLabel}}]",
 	"wrongAsset": "Modtog betaling i forkert valuta",
 	"switchToSingleAddress": "Sørg for at du har valgt en single-address wallet. Ellers skift til en single-address wallet eller opret en og send mig adressen før du betaler.",
@@ -24,6 +24,6 @@
 	"reservationWillExpire": "Din reservation af brugernavnet \"{{username}}\" udløbet indenfor 1 minut. Hvis ikke vi modtager betaling fra dig, hæves reservationen og andre vil dernæst kunne købe brugernavnet.",
 	"paymentIsConfirmed": "Din betaling er bekræftet.",
 	"inAttestation": "Brugernavn \"{{username}}\" registreres nu. Vent venligst.",
-	"usernameAttested": "Brugernavnet \"{{username}}\" er nu knyttet til din Byteball adresse. Se din attesterings-unit her: https://explorer.byteball.org/#{{{unit}}}",
-	"usernameAlreadyAttested": "Brugernavnet \"{{username}}\" blev linket til din Byteball-adresse {{attestationDate}} UTC."
+	"usernameAttested": "Brugernavnet \"{{username}}\" er nu knyttet til din Obyte adresse. Se din attesterings-unit her: https://explorer.obyte.org/#{{{unit}}}",
+	"usernameAlreadyAttested": "Brugernavnet \"{{username}}\" blev linket til din Obyte-adresse {{attestationDate}} UTC."
 }

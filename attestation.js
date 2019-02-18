@@ -1,11 +1,11 @@
 /*jslint node: true */
 'use strict';
-const constants = require('byteballcore/constants');
-const conf = require('byteballcore/conf');
-const db = require('byteballcore/db');
-const eventBus = require('byteballcore/event_bus');
-const validationUtils = require('byteballcore/validation_utils');
-const headlessWallet = require('headless-byteball');
+const constants = require('ocore/constants');
+const conf = require('ocore/conf');
+const db = require('ocore/db');
+const eventBus = require('ocore/event_bus');
+const validationUtils = require('ocore/validation_utils');
+const headlessWallet = require('headless-obyte');
 const notifications = require('./modules/notifications');
 const usernameAttestation = require('./modules/username-attestation');
 const i18n = require('./modules/i18n');
@@ -35,7 +35,7 @@ process.on('unhandledRejection', (err) => {
 
 function handleHeadlessReady() {
 	if (conf.bRunWitness) {
-		require('byteball-witness');
+		require('obyte-witness');
 		eventBus.emit('headless_wallet_ready');
 	} else {
 		headlessWallet.setupChatEventHandlers();
@@ -106,7 +106,7 @@ function handleWalletReady() {
 }
 
 function moveFundsToAccumulationAddress() {
-	let network = require('byteballcore/network.js');
+	let network = require('ocore/network.js');
 	if (network.isCatchingUp())
 		return;
 
@@ -134,7 +134,7 @@ function moveFundsToAccumulationAddress() {
 			}, (err, unit) => {
 				if (err) {
 					console.error("failed to move funds: " + err);
-					let balances = require('byteballcore/balances');
+					let balances = require('ocore/balances');
 					balances.readBalance(arrAddresses[0], (balance) => {
 						console.error('balance', balance);
 						notifications.notifyAdmin('failed to move funds', err + ", balance: " + JSON.stringify(balance));
@@ -148,7 +148,7 @@ function moveFundsToAccumulationAddress() {
 }
 
 function moveFundsToCFAddress() {
-	let network = require('byteballcore/network.js');
+	let network = require('ocore/network.js');
 	if (network.isCatchingUp())
 		return;
 
@@ -167,8 +167,8 @@ function moveFundsToCFAddress() {
 }
 
 function handleNewTransactions(arrUnits) {
-	const device = require('byteballcore/device.js');
-	const mutex = require('byteballcore/mutex.js');
+	const device = require('ocore/device.js');
+	const mutex = require('ocore/mutex.js');
 
 	db.query(
 		`SELECT
@@ -255,7 +255,7 @@ function checkPayment(row, onDone) {
 					return onDone(
 						text + '\n\n' +
 						i18n.__('pleasePay', {btnLabel: 'attestation payment'}) +
-						getByteballPayButton(row.receiving_address, priceInBytes, row.user_address)
+						getObytePayButton(row.receiving_address, priceInBytes, row.user_address)
 					);
 				}
 			
@@ -326,7 +326,7 @@ function checkPaymentIsLate(row, onDone) {
 }
 
 function bouncePayment(row){
-	const device = require('byteballcore/device.js');
+	const device = require('ocore/device.js');
 	if (row.amount < BOUNCE_FEE + 1000)
 		return console.log("amount "+row.amount+" is too small to bounce");
 	headlessWallet.sendMultiPayment({
@@ -348,7 +348,7 @@ function bouncePayment(row){
 }
 
 function handleTransactionsBecameStable(arrUnits) {
-	const device = require('byteballcore/device.js');
+	const device = require('ocore/device.js');
 	db.query(
 		`SELECT 
 			transaction_id, payment_unit,
@@ -417,8 +417,8 @@ function handleTransactionsBecameStable(arrUnits) {
  * @param {string} response
  */
 function respond(from_address, text, response = '') {
-	const device = require('byteballcore/device.js');
-	const mutex = require('byteballcore/mutex.js');
+	const device = require('ocore/device.js');
+	const mutex = require('ocore/mutex.js');
 
 	readUserInfo(from_address, (userInfo) => {
 		if (userInfo.lang != 'unknown') {
@@ -593,7 +593,7 @@ function respond(from_address, text, response = '') {
 									'text',
 									(response ? response + '\n\n' : '') +
 										i18n.__('pleasePay', {btnLabel: 'attestation payment'}) +
-										getByteballPayButton(receiving_address, priceInBytes, userInfo.user_address)
+										getObytePayButton(receiving_address, priceInBytes, userInfo.user_address)
 								);
 							}
 
@@ -673,7 +673,7 @@ function readUserInfo(device_address, callback) {
  * @return {Promise}
  */
 function readOrAssignReceivingAddress(device_address, userInfo, callback) {
-	const mutex = require('byteballcore/mutex.js');
+	const mutex = require('ocore/mutex.js');
 	mutex.lock([device_address], (unlock) => {
 		db.query(
 			`SELECT receiving_address, username, ${db.getUnixTimestamp('last_price_date')} AS price_ts
@@ -820,7 +820,7 @@ function checkUsernamesLimitsPerDeviceAndUserAddresses(device_address, user_addr
 }
 
 function checkUsernamesReservationTimeout() {
-	const device = require('byteballcore/device.js');
+	const device = require('ocore/device.js');
 	const borderTimeout = Math.round(Date.now()/1000 - (conf.priceTimeout - conf.reminderTimeout));
 
 	db.query(
@@ -876,7 +876,7 @@ function getTxtCommandButton(label, command) {
 	return `[${label}](command:${_command})`;
 }
 
-function getByteballPayButton(address, price, user_address) {
+function getObytePayButton(address, price, user_address) {
 	return `(byteball:${address}?amount=${price}&single_address=single${user_address})`;
 }
 

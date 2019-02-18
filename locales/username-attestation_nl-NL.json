@@ -1,6 +1,6 @@
 {
 	"selectLanguage": "Selecteer alsjeblieft je taal: ",
-	"greeting": "Hier kan je een gebruikersnaam kopen om geld te kunnen ontvangen op je @gebruikersnaam in plaats van een minder gebruiksvriendelijk Byteball adres. \n\nJe gebruikersnaam zal voor altijd gelinkt zijn aan je Byteball adres en niemand anders zal in staat zijn dezelfde gebruikersnaam te reserveren.\n\nDe prijs van de gebruikersnaam is afhankelijk van de lengte:\n\n{{priceLines}}\n\nEr is geen terugbetaling mogelijk, ook niet als de getuigenis om de een of andere reden mislukt.\n\nAlle opbrengsten van de verkoop van gebruikersnamen gaat naar het Byteball Gemeenschap Fonds en helpt bij de financiering van promotie en ontwikkeling van het platform.",
+	"greeting": "Hier kan je een gebruikersnaam kopen om geld te kunnen ontvangen op je @gebruikersnaam in plaats van een minder gebruiksvriendelijk  adres. \n\nJe gebruikersnaam zal voor altijd gelinkt zijn aan je  adres en niemand anders zal in staat zijn dezelfde gebruikersnaam te reserveren.\n\nDe prijs van de gebruikersnaam is afhankelijk van de lengte:\n\n{{priceLines}}\n\nEr is geen terugbetaling mogelijk, ook niet als de getuigenis om de een of andere reden mislukt.\n\nAlle opbrengsten van de verkoop van gebruikersnamen gaat naar het  Gemeenschap Fonds en helpt bij de financiering van promotie en ontwikkeling van het platform.",
 	"priceLine": "{{minLength}} of meer tekens: {{price}} GB",
 	"insertMyAddress": "Stuur mij alsjeblieft het adres dat je wilt koppelen aan een gebruikersnaam (klik ... en Mijn adres invoegen).\nZorg er voor dat je een portefeuille met een enkel adres gebruikt. Als je geen enkel adres portefeuille hebt, voeg er dan alsjeblieft een toe (burger menu, portefeuille toevoegen) en zorg dat er voldoende fondsen op staan om de gebruikersnaam te kunnen kopen.",
 	"insertMyUsername": "Stuur mij alsjeblieft de gebruikersnaam die je wilt kopen. Het mag alleen bestaan uit Latijnse letters, cijfers, \"-\" en \"_\".",
@@ -11,7 +11,7 @@
 	"usernameTaken": "Gebruikersnaam \"{{username}}\" is al in gebruik. Kies alsjeblieft een andere naam.",
 	"addressAlreadyAttested": "Je BB adres is al gelinkt aan een gebruikersnaam. Je kan een andere portefeuille maken en er een gebruikersnaam voor kopen.",
 	"usernamesPerDeviceLimit": "Je kan maximaal {{limit}} gebruikersnamen per apparaat kopen!",
-	"goingToAttestAddress": "Bedankt, ik ga je Byteball adres {{address}} linken.",
+	"goingToAttestAddress": "Bedankt, ik ga je  adres {{address}} linken.",
 	"goingToAttestUsername": "Bedankt, ik ga de gebruikersnaam \"{{username}}\" koppelen aan je BB adres.\nDe prijs is {{priceInGB}} GB. De gebruikersnaam is voor een uur gereserveerd terwijl we wachten op de betaling.",
 	"pleasePay": "Betaal alsjeblieft voor de gebruikersnaam: [{{btnLabel}}]",
 	"wrongAsset": "Betaling in de verkeerde activa ontvangen",
@@ -24,6 +24,6 @@
 	"reservationWillExpire": "Je reservering van de gebruikersnaam \"{{username}}\" vervalt binnen 1 minuut. Als we geen betaling van je ontvangen zal de naam worden vrijgegeven en kan deze door iemand anders worden gekocht.",
 	"paymentIsConfirmed": "Je betaling is bevestigd.",
 	"inAttestation": "De gebruikersnaam \"{{username}}\" is in afwachting van een getuigenis. Een ogenblik geduld.",
-	"usernameAttested": "De gebruikersnaam \"{{username}}\" is nu gelinkt aan je BB adres. Zie de getuigenis op https://explorer.byteball.org/#{{{unit}}}",
+	"usernameAttested": "De gebruikersnaam \"{{username}}\" is nu gelinkt aan je BB adres. Zie de getuigenis op https://explorer.obyte.org/#{{{unit}}}",
 	"usernameAlreadyAttested": "De gebruikersnaam \"{{username}}\" was eerder al gelinkt aan je BB adres om {{attestationDate}} UTC."
 }
