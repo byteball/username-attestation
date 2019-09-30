@@ -1,6 +1,6 @@
 {
 	"selectLanguage": "Jowo yan ede re: ",
-	"greeting": "Nibi o le ra oruko olumulo kan lati le gba owo ni @oruko olumulo dipo adiresi Obyte ti ko fanimora.\n\nOruko olumulo re yio je siso po pelu adiresi Obyte re titi aye ti enikeni ko si ni le lo oruko olumulo naa.\n\nIye owo oruko olumulo gbarale bi o ba se gun si:\n\n{{priceLines}}\n\nOwo naa ko ni se dapada koda ti ijerisi ba kuna fun idi kankan.\n\nGbogbo awon ere ti o ba wole lati ori tita oruko olumulo yio ma lo sinu owo awujo Obyte ti yio si ma seranlowo fun ipolongo ati idagbasoke pilatifomu.",
+	"greeting": "Nibi o le ra orukọ olumulo kan lati le gba owo ni @orukọ olumulo dipo adirẹẹsi Obyte ti ko fanimọra.\n\nOrukọ olumulo rẹ yo jẹ siso pọ pẹlu adirẹẹsi Obyte rẹ titi aye ti ẹnikẹni ko si ni le lo orukọ olumulo naa mọ.\n\nIye owo orukọ olumulo gbarale bi o ba se gun si:\n\n{{priceLines}}\n\nOwo naa ko ni se dapada koda ti ijẹrisi naa ba kuna fun idi kankan.\n\nGbogbo awọn ere ti o ba wọle lati ori tita orukọ olumulo yo ma lọ sinu owo awujọ Obyte ti yo si ma se iranlọwọ fun ipolongo ati idagbasoke pilatifọmu naa.",
 	"priceLine": "{{minLength}} tabi characters to jube lo: {{price}} GB",
 	"insertMyAddress": "Jowo fi adiresi re ti o fe so po pelu oruko olumulo kan ranse simi (te lori ... ati Fi adiresi mi si).\nRi daju pe o wa ninu apamowo aladiresi-kan. Ti o ko ba ni apamowo aladiresi-kan, jowo fi okan kun (akojo burger, fi apamowo kun) ki o si fi iye to to lati ra oruko olumulo re si.",
 	"insertMyUsername": "Jowo fi oruko olumulo ti o fe lati ra ranse simi. O le ni awon leta Latin, awon nomba, \"-\", ati \"_\" nikan.",
@@ -11,7 +11,7 @@
 	"usernameTaken": "Oruko olumulo \"{{username}}\" ti je lilo. Jowo yan omiran.",
 	"addressAlreadyAttested": "Adiresi BB re ti wa ni asopo pelu oruko olumulo kan. O le seda apamowo miran ki o si ra oruko olumulo fun.",
 	"usernamesPerDeviceLimit": "O ko le ra ju {{limit}} oruko olumulo lo fun ero kan!",
-	"goingToAttestAddress": "O seun, lilo lati so adiresi Obyte re po: {{address}}.",
+	"goingToAttestAddress": "O seun, lilọ lati so adirẹẹsi Obyte rẹ pọ: {{address}}.",
 	"goingToAttestUsername": "O seun, lilo lati so oruko olumulo \"{{username}}\" po pelu adiresi BB.\nIye owo naa je {{priceInGB}} GB. Oruko olumulo naa ti wa nipamo fun wakati kan nigbati a n duro fun owo sisan.",
 	"pleasePay": "Jowo sanwo fun oruko olumulo naa: [{{btnLabel}}]",
 	"wrongAsset": "A gba owo sinu dukia ti ko to",
@@ -24,6 +24,6 @@
 	"reservationWillExpire": "Oruko olumulo ti o fipamo \"{{username}}\" yio pari larin iseju kan. Ti a ko ba ri owo naa lati odo re, oruko naa yio gba itusile ti elomiran yio si le ra.",
 	"paymentIsConfirmed": "A ti fidi owo ti o san mule.",
 	"inAttestation": "A n jerisi ruko olumulo \"{{username}}\" lowo. Jowo duro.",
-	"usernameAttested": "Nisisiyi oruko olumulo \"{{username}}\" ti di siso po pelu adiresi BB, wo eri ijerisi naa: https://explorer.obyte.org/#{{{unit}}}",
+	"usernameAttested": "Nisinyi orukọ olumulo \"{{username}}\" ti di siso pọ pẹlu adirẹẹsi BB, wo ẹri ijẹrisi naa: https://explorer.obyte.org/#{{{unit}}}",
 	"usernameAlreadyAttested": "Oruko olumulo \"{{username}}\" ti je siso po pelu adiresi BB re ni {{attestationDate}} UTC."
 }

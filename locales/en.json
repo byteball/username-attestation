@@ -9,10 +9,10 @@
 	"bouncedPayment": "Sent back your payment less the bounce fee of {{bounce_fee}} bytes.",
 	"usernameNotOnSale": "Username \"{{username}}\" is not being sold now as it is too short. Please choose another.",
 	"usernameTaken": "Username \"{{username}}\" is already taken. Please choose another.",
-	"addressAlreadyAttested": "Your BB address is already linked to a username. You can create another wallet and buy a username for it.",
+	"addressAlreadyAttested": "Your wallet address is already linked to a username. You can create another wallet and buy a username for it.",
 	"usernamesPerDeviceLimit": "You can only buy up to {{limit}} usernames per one device!",
 	"goingToAttestAddress": "Thanks, going to link your Obyte address: {{address}}.",
-	"goingToAttestUsername": "Thanks, going to link username \"{{username}}\" to your BB address.\nThe price is {{priceInGB}} GB. The username is reserved for 1 hour while we wait for payment.",
+	"goingToAttestUsername": "Thanks, going to link username \"{{username}}\" to your wallet address.\nThe price is {{priceInGB}} GB. The username is reserved for 1 hour while we wait for payment.",
 	"pleasePay": "Please pay for the username: [{{btnLabel}}]",
 	"wrongAsset": "Received payment in wrong asset",
 	"switchToSingleAddress": "Make sure you are in a single-address wallet, otherwise switch to a single-address wallet or create one and send me your address before paying.",
@@ -24,6 +24,6 @@
 	"reservationWillExpire": "Your reservation of username \"{{username}}\" is going to expire within 1 minute.  If we don't receive the payment from you, the name will be released and can be bought by anybody else.",
 	"paymentIsConfirmed": "Your payment is confirmed.",
 	"inAttestation": "Username \"{{username}}\" is being attested. Please wait.",
-	"usernameAttested": "Now username \"{{username}}\" is linked to your BB address, see the attestation unit: https://explorer.obyte.org/#{{{unit}}}",
-	"usernameAlreadyAttested": "Username \"{{username}}\" was already linked to your BB address at {{attestationDate}} UTC."
+	"usernameAttested": "Now username \"{{username}}\" is linked to your wallet address, see the attestation unit: https://explorer.obyte.org/#{{{unit}}}",
+	"usernameAlreadyAttested": "Username \"{{username}}\" was already linked to your wallet address at {{attestationDate}} UTC."
 }
