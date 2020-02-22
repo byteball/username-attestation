@@ -844,7 +844,6 @@ function checkUsernamesReservationTimeout() {
 					i18n.__('reservationWillExpire', {username: row.username}),
 					{
 						ifOk: () => {
-
 							db.query(
 								`UPDATE receiving_addresses
 								SET is_notified=1
@@ -852,8 +851,8 @@ function checkUsernamesReservationTimeout() {
 								[row.receiving_address],
 								(res) => {}
 							);
-
-						}
+						},
+						ifError: () => { },
 					}
 				);
 
