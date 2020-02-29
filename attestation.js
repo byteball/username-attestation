@@ -157,6 +157,7 @@ function moveFundsToCFAddress() {
 		asset: null,
 		to_address: conf.cf_address,
 		send_all: true,
+		change_address: accumulationAddress,
 		paying_addresses: [accumulationAddress]
 	}, (err, unit) => {
 		if (err)
