@@ -129,6 +129,7 @@ function moveFundsToAccumulationAddress() {
 			headlessWallet.sendMultiPayment({
 				asset: null,
 				to_address: accumulationAddress,
+				change_address: accumulationAddress,
 				send_all: true,
 				paying_addresses: arrAddresses
 			}, (err, unit) => {
