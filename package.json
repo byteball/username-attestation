@@ -1,7 +1,7 @@
 {
 	"name": "username-attestation",
 	"version": "1.0.0",
-	"description": "A bot that sells usernames. Usernames allow to send money to @username instead of Obyte address.",
+	"description": "A bot that sells usernames. Usernames allow to send money to @@username instead of Obyte address.",
 	"main": "attestation.js",
 	"scripts": {
 		"test": "node test/locales.js"
